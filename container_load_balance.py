@@ -98,13 +98,13 @@ def load_unload_ship(arr, op):
                 least_time = curr_time
                 best_loc = [i, col]
         arr[r(best_loc[0])][c(best_loc[1])] = cell_to_insert # optimal location to place container [time]
-        print(f"The estimated time of this load operation is {least_time+2} minutes\n") # time estimation, +2 from truck -> ship
+        print(f"The estimated time of this load operation is {least_time+2} minutes") # time estimation, +2 from truck -> ship
         print(f"Move {c_name} container with weight {c_weight} from the truck to [{best_loc[0]}, {best_loc[1]}] on the ship.") # instruction
         log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n") # log file onloading
     elif op == "u": # unload 
         c_name = input("Enter exact name of container to offload.\n-> ") # container name to move
         time_taken = move_c(arr, [c_name, 0], -1, -1, 0) # loc == -1 to unload
-        print(f"The estimated time of this unload operation is {time_taken} minutes\n") # time estimation
+        print(f"The estimated time of this unload operation is {time_taken} minutes") # time estimation
         log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n") # log file offloading
     return
 
@@ -144,10 +144,10 @@ def balance_ship(arr):
         
         # check if timeout (balance not possible)
         if(time.time() - s_time >= 5):
-            print("\n\nBalance not possible -_- PERFORM SIFT (put all containers in buffer zone, heaviest switch back and forth till row is filled, move up)\n\n")
+            print("\n\nBalance not possible -_- PERFORM SIFT (put all containers in buffer zone, heaviest switch back and forth till row is filled, move up)\n")
             log_file.write(f"{get_date_time()} The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.\n") # log file balancing fail
             time_taken = perform_sift(arr)
-            print(f"The estimated time of this SIFT operation is {time_taken} minutes\n") # time estimation
+            print(f"The estimated time of this SIFT operation is {time_taken} minutes") # time estimation
             log_file.write(f"{get_date_time()} SIFT has been completed.\n") # log file balancing fail
             return
     
@@ -169,10 +169,10 @@ def balance_ship(arr):
     for cell in to_move_left:
         total_time_taken += move_c(arr, cell, 6, -1,0)
     
-    print("\nContainers to move to the left [port]:",to_move_left,"\n")
-    print("Containers to move to the right [starboard]:",to_move_right,"\n")
+    print("\nContainers to move to the left [port]:",to_move_left)
+    print("Containers to move to the right [starboard]:",to_move_right)
     # print("Moved Containers: \n\n",arr)
-    print(f"The estimated time of this balancing operation is {total_time_taken} minutes\n") # time estimation balancing
+    print(f"The estimated time of this balancing operation is {total_time_taken} minutes") # time estimation balancing
     log_file.write(f"{get_date_time()} The ship has been balanced according to the legal definition of balancing.\n") # log file balancing success
     
 # Helper to balance_ship function
@@ -184,7 +184,7 @@ def check_unbalance(l_w, r_w):
     min_side = min(l_w,r_w)
     return (((max_side - min_side) / max_side) > 0.1)
 
-# Helper for balance/load optimal move for container [recursive]
+# Helper for balance/unload optimal move for container [recursive]
 # cell is to be moved, loc is column to start with, mod is to either move right (+1) or move left (-1) 
 # if loc is -1, cell is to be unloaded (removed from ship array)
 # time_taken is minutes the operation has taken so far, saved and added to in recursive calls.
@@ -202,9 +202,10 @@ def move_c(arr, cell, loc, mod, time_taken):
         i -= 1
     # here, access to container with nothing above, time to move to loc column
     # make current cell UNUSED
+    cell_weight = arr[r(i)][c(cell_c)][1] 
     arr[r(i)][c(cell_c)] = ["UNUSED", 0]
     if loc == -1: # if container is to be unloaded
-        print(f"Move {cell[0]} container with weight {cell[1]} from [{i}, {cell_c}] in the ship to the truck.\n") # instruction
+        print(f"Move {cell[0]} container with weight {cell_weight} from [{i}, {cell_c}] in the ship to the truck.") # instruction
         return time_taken + r(i) + c(cell_c) + 2 # take previous time taken + current container movement + (2 ship->truck) 
     # check that no column from cell_c to loc is completely full
     # if any are, move the top container out of the way
@@ -214,7 +215,7 @@ def move_c(arr, cell, loc, mod, time_taken):
             time_taken = move_c(arr, curr_cell, col + mod, mod, time_taken)
     # get to loc column
     time_to_move = 0 # for minute calculations
-    print(f"Move {cell[0]} container with weight {cell[1]} from [{i}, {cell_c}] in the ship to ") # instruction
+    print(f"Move {cell[0]} container with weight {cell[1]} from [{i}, {cell_c}] in the ship to ", end = '') # instruction
     while cell_c != loc:
         if arr[r(i)][c(cell_c + mod)][0] == "UNUSED": # move mod column if possible
             cell_c += mod
@@ -227,7 +228,7 @@ def move_c(arr, cell, loc, mod, time_taken):
         time_to_move += 1 # +1 minute each row gone down
     # place the cell at [i, cell_c]
     arr[r(i)][c(cell_c)] = cell
-    print(f"[{i}, {cell_c}] in the ship.\n") # instruction
+    print(f"[{i}, {cell_c}] in the ship.") # instruction
     return time_taken + time_to_move # cell has been successfully moved, return time
 
 # Helper for move_c to return arr index of cell
