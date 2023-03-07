@@ -20,7 +20,7 @@ def program_start():
 
         def check_name():
             if full_name=="":
-                prompt_label.config(text="No user signed in. Please try again\nPress CNTRL + 'S' to sign in, or click on the 'Actions' dropdown", fg='red')
+                prompt_label.config(text="No user signed in. Please try again\nPress CTRL + 'S' to sign in, or click on the 'Actions' dropdown", fg='red')
             else:
                 start_a_new_log_file_prompt()
 
@@ -147,16 +147,21 @@ def upload_manfiest():
                              font=("Helvetica", 18))
     selected_file.pack(pady=50)
 
+    #bug needs to be patched here
+    #filedialog.askopenfilename() allows the user to select multiple files
+    # this means infinite continue buttons can be selected
     def browse_file():
         file_path = filedialog.askopenfilename()
         if file_path:
             selected_file.config(text=f"Selected file: {file_path}")
             continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=balance_or_transfer)
+
             continue_button.pack(pady=50)
 
     button = tk.Button(frame, text="Select File", command=browse_file)
     button.pack(pady=50)
 
+#Here we want to call manifest_init() to translate it
 def balance_or_transfer():
     for widget in frame.winfo_children():
         widget.destroy()
@@ -174,6 +179,7 @@ def balance_or_transfer():
     transfer_button = tk.Button(button_frame, text="Start a transfer", font=("Helvetica", 16), command=container_transfer)
     transfer_button.pack(side=tk.LEFT, padx=10)
 
+#Passing in an array for the ship balancing functionality
 def ship_balance(arr):
     arr[1]
     balance_ship(arr)
@@ -455,28 +461,33 @@ def add_comment():
     submit_button = tk.Button(comment_prompt, text="Submit", command=submit_comment)
     submit_button.pack(side="bottom")
 
-root = tk.Tk()
-root.geometry('{}x{}+0+0'.format(root.winfo_screenwidth(), root.winfo_screenheight())) # Set window dimensions to full screen
-root.title("Container Application")
+def main():
+    program_start()
+    root.mainloop()
 
-# Create a frame to hold all of the content
-frame = tk.Frame(root)
-frame.pack(expand=True)
+if __name__ == "__main__":
 
-# Create a menu bar
-menu_bar = tk.Menu(root)
-root.config(menu=menu_bar)
+    #creating intial file
+    file_path = "KeoghLongBeach.txt"
+    root = tk.Tk()
+    root.geometry(
+        '{}x{}+0+0'.format(root.winfo_screenwidth(), root.winfo_screenheight()))  # Set window dimensions to full screen
+    root.title("Container Application")
 
-# Create an "Actions" dropdown menu
-actions_menu = tk.Menu(menu_bar, tearoff=0)
-menu_bar.add_cascade(label="Actions", menu=actions_menu)
-actions_menu.add_command(label="Add comment (CTRL + U)", command=add_comment)
-actions_menu.add_command(label="Sign In (CTRL + S)", command=input_name)
+    # Create a frame to hold all of the content
+    frame = tk.Frame(root)
+    frame.pack(expand=True)
 
-root.bind("<Control-s>", lambda event: input_name())
-root.bind("<Control-u>", lambda event: add_comment())
+    # Create a menu bar
+    menu_bar = tk.Menu(root)
+    root.config(menu=menu_bar)
 
+    # Create an "Actions" dropdown menu
+    actions_menu = tk.Menu(menu_bar, tearoff=0)
+    menu_bar.add_cascade(label="Actions", menu=actions_menu)
+    actions_menu.add_command(label="Add comment (CTRL + U)", command=add_comment)
+    actions_menu.add_command(label="Sign In (CTRL + S)", command=input_name)
 
-program_start()
-
-root.mainloop()
+    root.bind("<Control-s>", lambda event: input_name())
+    root.bind("<Control-u>", lambda event: add_comment())
+    main()

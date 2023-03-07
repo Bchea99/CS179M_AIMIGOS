@@ -12,6 +12,9 @@ log_file = open(log_file_to_write, "a") # log file variable in use in all functi
 user_name = "123" # user who signs in, "123" signifies no previous user signed in (first run)
 
 #FUNCTION: all functions below
+
+#Any function with ## above it denotes that it isn't immediately required for integration
+##
 def log_file_init(): # determine if the user wants the log file restarted when programs starts
     global log_file
     choice = input("Do you want to restart the log file? y for yes, n for no\n-> ")
@@ -25,6 +28,7 @@ def log_file_init(): # determine if the user wants the log file restarted when p
 def get_date_time():
     return f"{datetime.now().strftime('%B')} {datetime.now().day}, {datetime.now().year}: {datetime.now().hour:0>2}:{datetime.now().minute:0>2}"
 
+##
 def log_file_change_user():
     global log_file, user_name
     if user_name != "123": # if there is a previous user, sign them out
@@ -32,7 +36,7 @@ def log_file_change_user():
     user_name = input("Enter the name of the User to sign in\n-> ") # new user
     log_file.write(f"{get_date_time()} {user_name} signs in\n")
     return
-
+##
 def log_file_enter_comment():
     global log_file
     comment = input("Enter comment to append to log file\n-> ")
@@ -41,10 +45,11 @@ def log_file_enter_comment():
 
 #initializing manifest by getting name
 #We need this function in order to initialize array that is passed into ship_balance() argument within driver file
-def manifest_init():
-    file_name = input("Enter the name of the manifest file. Example: SSMajestic.txt\n-> ")
-    new_filename = file_name.split(".")[0] + "OUTBOUND.txt" # for updated manifest file
+def manifest_init(file_name):
+    #file_name = input("Enter the name of the manifest file. Example: SSMajestic.txt\n-> ")
+    #new_filename = file_name.split(".")[0] + "OUTBOUND.txt" # for updated manifest file
     # file_name = "ship_unbalanceable.txt"
+
     with open(file_name) as f:
         lines = f.readlines()
 
