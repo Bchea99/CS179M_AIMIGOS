@@ -66,7 +66,8 @@ def manifest_init(file_name):
     log_file.write(f"{get_date_time()} Manifest {file_name} is opened, there are {container_cnt} containers on the ship\n") # log file open manifest message
     print(arr)
     
-    return new_filename, arr
+    #return new_filename, arrs
+    return arr
 
 def write_new_manifest(f_to_write, arr):
     open(f_to_write, 'w').close() # clear file

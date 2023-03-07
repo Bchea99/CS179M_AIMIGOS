@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 import datetime
 import time
+import os
 from container_load_balance import *
 
 #Get current year
@@ -133,6 +134,10 @@ def load_existing_log_file():
     continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manfiest)
     continue_button.pack(pady=50)
 
+def shorten_file(filename):
+    file = os.path.split(filename)[1]
+    return file
+
 #takes file input
 #frame 4
 def upload_manfiest():
@@ -151,12 +156,15 @@ def upload_manfiest():
     #filedialog.askopenfilename() allows the user to select multiple files
     # this means infinite continue buttons can be selected
     def browse_file():
-        file_path = filedialog.askopenfilename()
+        file_path = filedialog.askopenfilename() #file path established
         if file_path:
-            selected_file.config(text=f"Selected file: {file_path}")
+            selected_file.config(text=f"Selected file: {file_path}")#file input
             continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=balance_or_transfer)
-
             continue_button.pack(pady=50)
+        #here is where interactions with backend start
+        file_name = shorten_file(file_path)#file_path truncated into txt file
+        print(file_name)
+        file_arr = manifest_init(file_path)#txt file passed into manifest_init to be transformed into arr
 
     button = tk.Button(frame, text="Select File", command=browse_file)
     button.pack(pady=50)
@@ -181,8 +189,7 @@ def balance_or_transfer():
 
 #Passing in an array for the ship balancing functionality
 def ship_balance(arr):
-    arr[1]
-    balance_ship(arr)
+    balance_ship(file_arr)
 
 def container_transfer():
     for widget in frame.winfo_children():
@@ -468,7 +475,8 @@ def main():
 if __name__ == "__main__":
 
     #creating intial file
-    file_path = "KeoghLongBeach.txt"
+    file_name = "KeoghLongBeach.txt" #global file_name that should be converted into array
+    file_arr = []
     root = tk.Tk()
     root.geometry(
         '{}x{}+0+0'.format(root.winfo_screenwidth(), root.winfo_screenheight()))  # Set window dimensions to full screen
