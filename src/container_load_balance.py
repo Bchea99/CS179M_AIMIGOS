@@ -26,7 +26,7 @@ def log_file_init(): # determine if the user wants the log file restarted when p
 
 # Helper with log file printing [Month Day, Year:] (no appending space)
 def get_date_time():
-    return f"{datetime.now().strftime('%B')} {datetime.now().day}, {datetime.now().year}: {datetime.now().hour:0>2}:{datetime.now().minute:0>2}"
+    return f"{datetime.datetime.now().strftime('%B')} {datetime.datetime.now().day}, {datetime.datetime.now().year}: {datetime.datetime.now().hour:0>2}:{datetime.datetime.now().minute:0>2}"
 
 ##
 def log_file_change_user():
@@ -63,8 +63,8 @@ def manifest_init(file_name):
         arr[r(vals[0])][c(vals[1])] = [vals[3], vals[2]]
         if vals[2] > 0:
             container_cnt += 1
-    log_file.write(f"{get_date_time()} Manifest {file_name} is opened, there are {container_cnt} containers on the ship\n") # log file open manifest message
-    print(arr)
+    #log_file.write(f"{get_date_time()} Manifest {file_name} is opened, there are {container_cnt} containers on the ship\n") # log file open manifest message
+    #print(arr)
     
     #return new_filename, arrs
     return arr
@@ -87,11 +87,17 @@ def write_new_manifest(f_to_write, arr):
 
 # Load/Unload
 # 1 minute within ship, 2 minutes to truck, 4 minutes ship/buffer
+#this should return a tuple
 def load_unload_ship(arr, op):
-    if op == "l": # load 
+
+    opTuple = ("name", 1)
+    if op == "l": # load
+
+        ##we don't need this
         c_name = input("Enter exact name of container to load.\n-> ") # container name to move
         c_weight = int(input("Enter weight of container\n-> ")) # container weight
         cell_to_insert = [c_name, c_weight]
+
         # search for least time to insert
         least_time = float('inf')
         best_loc = [-1,-1]
@@ -109,17 +115,23 @@ def load_unload_ship(arr, op):
         print(f"The estimated time of this load operation is {least_time+2} minutes") # time estimation, +2 from truck -> ship
         print(f"Move {c_name} container with weight {c_weight} from the truck to [{best_loc[0]}, {best_loc[1]}] on the ship.") # instruction
         log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n") # log file onloading
-    elif op == "u": # unload 
+
+    elif op == "u": # unload
+
         c_name = input("Enter exact name of container to offload.\n-> ") # container name to move
+
+        #needs to be rewritten
         time_taken = move_c(arr, [c_name, 0], -1, -1, 0) # loc == -1 to unload
         print(f"The estimated time of this unload operation is {time_taken} minutes") # time estimation
         log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n") # log file offloading
-    return
+
+    return opTuple
 
 # Balance ship: Heavier side of ship is no more than 10%
 # weight of lighter side
 def balance_ship(arr):
     # Get weight on both sides
+    moves = ()
     l_cells = []
     r_cells = []
     l_w = 0

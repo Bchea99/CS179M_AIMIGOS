@@ -164,12 +164,14 @@ def upload_manfiest():
         #here is where interactions with backend start
         file_name = shorten_file(file_path)#file_path truncated into txt file
         print(file_name)
+        global file_arr
         file_arr = manifest_init(file_path)#txt file passed into manifest_init to be transformed into arr
+
 
     button = tk.Button(frame, text="Select File", command=browse_file)
     button.pack(pady=50)
 
-#Here we want to call manifest_init() to translate it
+#frame 6
 def balance_or_transfer():
     for widget in frame.winfo_children():
         widget.destroy()
@@ -181,7 +183,8 @@ def balance_or_transfer():
     button_frame = tk.Frame(frame)
     button_frame.pack()
 
-    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command=ship_balance)
+    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command=lambda:ship_balance(file_arr))
+                               #command=ship_balance)
     balance_button.pack(side=tk.RIGHT, padx=10)
 
     transfer_button = tk.Button(button_frame, text="Start a transfer", font=("Helvetica", 16), command=container_transfer)
@@ -189,7 +192,8 @@ def balance_or_transfer():
 
 #Passing in an array for the ship balancing functionality
 def ship_balance(arr):
-    balance_ship(file_arr)
+
+    balance_ship(arr)
 
 def container_transfer():
     for widget in frame.winfo_children():
@@ -205,8 +209,7 @@ def container_transfer():
     balance_button = tk.Button(button_frame, text="Unload", font=("Helvetica", 16), command=unload_operation)
     balance_button.pack(side=tk.RIGHT, padx=10)
 
-    transfer_button = tk.Button(button_frame, text="Load", font=("Helvetica", 16),
-                                command=load_operation)
+    transfer_button = tk.Button(button_frame, text="Load", font=("Helvetica", 16), command=load_operation)
     transfer_button.pack(side=tk.LEFT, padx=10)
 
 def load_operation():
@@ -271,6 +274,7 @@ def load_operation():
 
         # function to alternate the background color of the red cell
         def alternate_color():
+            # we need a way to bring a value in
             cell = grid_frame.grid_slaves(row=0,column=0)[0] #Backend needs a way to find the position
             current_color = cell.cget("bg")
             new_color = "white" if current_color == "red" else "red"
@@ -340,6 +344,7 @@ def select_container(name):
 def order_of_operations():
     for widget in frame.winfo_children():
         widget.destroy()
+
     operations = ["Move (2,1) to (2,3)", "Move (4,1) to (0,1)", "Move (X,Y) to (Z, Y)"]
 
     label = tk.Label(frame, text="Order of operations:", font=("Helvetica", 18))
@@ -350,7 +355,7 @@ def order_of_operations():
         label.pack()
 
     coordinates = [[2, 1], [2, 3], [3, 4]]
-
+    # here we take in back end coordinates
     generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),
                              command=lambda: animation(coordinates))
     generate_animation.pack()
@@ -477,6 +482,9 @@ if __name__ == "__main__":
     #creating intial file
     file_name = "KeoghLongBeach.txt" #global file_name that should be converted into array
     file_arr = []
+    operation = "string"
+    moveTuple = ("name",0,)
+
     root = tk.Tk()
     root.geometry(
         '{}x{}+0+0'.format(root.winfo_screenwidth(), root.winfo_screenheight()))  # Set window dimensions to full screen
