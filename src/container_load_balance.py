@@ -145,7 +145,7 @@ def balance_ship(arr):
             cell = arr[r(i)][c(j)] 
             if(cell[1] > 0):
                 if j <= 6: # left side
-                    l_cells.append(cell + [j])
+                    l_cells.append(cell + [j,i])
                     l_w += cell[1] 
                 else: # right side
                     r_cells.append(cell + [j])
@@ -189,18 +189,20 @@ def balance_ship(arr):
             to_move_left.append(cell)
             print(to_move_left)
 
-    #to move left will always be first index and move right is always the one that follows
-
-
     total_time_taken = 0
+    moveC_R = (coord=[],first=[],second=[],0,0)
+    moveC_L = (coord=[],first=[],second=[],0,0)
     for cell in to_move_right: 
-        total_time_taken += move_c(arr, cell, 7, 1, 0)
+        #total_time_taken += move_c(arr, cell, 7, 1, 0)
+        moveC_R = move_c(arr, cell, 7, 1, 0,coord_list=[])
     for cell in to_move_left:
-        total_time_taken += move_c(arr, cell, 6, -1,0)
+        #total_time_taken += move_c(arr, cell, 6, -1,0)
+        moveC_L = move_c(arr, cell, 6, -1, 0,coord_list=[])
 
     #index 0 is left operations, index 1 is right, index 3 is total time
-    balanceData = (to_move_left, to_move_right, total_time_taken)
-    
+    total_time_taken = moveC_L[4] + moveC_R[4]
+    balanceData = (moveC_L, moveC_R, total_time_taken)
+
     print("\nContainers to move to the left [port]:",to_move_left)
     print("Containers to move to the right [starboard]:",to_move_right)
     # print("Moved Containers: \n\n",arr)
@@ -219,12 +221,14 @@ def check_unbalance(l_w, r_w):
     return (((max_side - min_side) / max_side) > 0.1)
 
 # Helper for balance/unload optimal move for container [recursive]
-# cell is to be moved, loc is column to start with, mod is to either move right (+1) or move left (-1) 
+# cell is to be moved, loc is column to start with, mod is to either move right (+1) or move left (-1)
 # if loc is -1, cell is to be unloaded (removed from ship array)
 # time_taken is minutes the operation has taken so far, saved and added to in recursive calls.
 # 1 minute within ship, 2 minutes ship <-> truck, 4 minutes ship <-> buffer
-def move_c(arr, cell, loc, mod, time_taken):
+# coord list is a list of coords this container has moved through
+def move_c(arr, cell, loc, mod, time_taken, coord_list):
     row_c,cell_c = find_cell(arr, cell) # get cell's index
+    j = cell_c # orginal cell column
     i = 8 # current row number
     while i != row_c: # loop down row to cell, move other containers out of the way
         curr_cell = arr[r(i)][c(cell_c)]
@@ -232,26 +236,23 @@ def move_c(arr, cell, loc, mod, time_taken):
             out_bound = -1
             if (cell_c - mod <= 0) or (cell_c - mod >= 13): # so recurs loc doesn't go out of bounds
                 out_bound = 1
-            time_taken = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken)
+            time_taken = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
         i -= 1
     # here, access to container with nothing above, time to move to loc column
     # make current cell UNUSED
-    cell_weight = arr[r(i)][c(cell_c)][1] 
+    cell_weight = arr[r(i)][c(cell_c)][1]
     arr[r(i)][c(cell_c)] = ["UNUSED", 0]
     if loc == -1: # if container is to be unloaded
         print(f"Move {cell[0]} container with weight {cell_weight} from [{i}, {cell_c}] in the ship to the truck.") # instruction
-        return time_taken + r(i) + c(cell_c) + 2 # take previous time taken + current container movement + (2 ship->truck) 
+        return time_taken + r(i) + c(cell_c) + 2 # take previous time taken + current container movement + (2 ship->truck)
     # check that no column from cell_c to loc is completely full
     # if any are, move the top container out of the way
-
     for col in range(cell_c + mod, loc + mod, mod):
         curr_cell = arr[r(8)][c(col)]
         if curr_cell[0] != "UNUSED":
-            time_taken = move_c(arr, curr_cell, col + mod, mod, time_taken)
+            coord_list, time_taken = move_c(arr, curr_cell, col + mod, mod, time_taken, coord_list)
     # get to loc column
     time_to_move = 0 # for minute calculations
-
-    # we should add this line to the tuple
     print(f"Move {cell[0]} container with weight {cell[1]} from [{i}, {cell_c}] in the ship to ", end = '') # instruction
     while cell_c != loc:
         if arr[r(i)][c(cell_c + mod)][0] == "UNUSED": # move mod column if possible
@@ -266,7 +267,8 @@ def move_c(arr, cell, loc, mod, time_taken):
     # place the cell at [i, cell_c]
     arr[r(i)][c(cell_c)] = cell
     print(f"[{i}, {cell_c}] in the ship.") # instruction
-    return time_taken + time_to_move # cell has been successfully moved, return time
+    moveTuple = (coord_list, (row_c, j), (i, cell_c), time_taken, time_to_move)
+    return moveTuple #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
 
 # Helper for move_c to return arr index of cell
 # cell is guaranteed to be in arr

@@ -217,11 +217,13 @@ def ship_balance(arr):
         grid_frame.columnconfigure(i, weight=1)
     for i in range(9):
         grid_frame.rowconfigure(i, weight=1)
+    global moveTuple
+    moveTuple = balance_ship(arr)
 
-    order_of_operations()
+    order_of_operations(moveTuple)
 
 
-    balance_ship(arr)
+
 
 def container_transfer():
     for widget in frame.winfo_children():
@@ -369,7 +371,7 @@ def select_container(name):
                              command=order_of_operations)
     generate_order.pack()
 
-def order_of_operations():
+def order_of_operations(coords):
     for widget in frame.winfo_children():
         widget.destroy()
 
@@ -382,11 +384,23 @@ def order_of_operations():
         label = tk.Label(frame, text=operation, font=("Helvetica", 18))
         label.pack()
 
-    coordinates = [[2, 1], [2, 3], [3, 4]]
+    #gotta find a way to get coordinates in here
+    coords = cycleCoords(coords)
+
+    coordinates = coords
+    print(coordinates)
+
+
     # here we take in back end coordinates
     generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),
                              command=lambda: animation(coordinates))
     generate_animation.pack()
+def cycleCoords(coords):
+    coordinates = []
+    for i in coords:
+        if type(i) == list:
+            coordinates.append(i)
+    return coordinates
 
 def animation(coordinates):
     for widget in frame.winfo_children():
