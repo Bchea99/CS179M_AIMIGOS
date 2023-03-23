@@ -131,11 +131,15 @@ def load_unload_ship(arr, op):
 # weight of lighter side
 def balance_ship(arr):
     # Get weight on both sides
-    moves = ()
+
     l_cells = []
     r_cells = []
     l_w = 0
     r_w = 0
+    cells_left = []
+    moveTuple = ("name", r_cells, l_cells)
+
+
     for i in range(1,9):
         for j in range(1,13):
             cell = arr[r(i)][c(j)] 
@@ -177,24 +181,34 @@ def balance_ship(arr):
         if cell[2] <= 6:
             cell.pop()
             to_move_right.append(cell)
+            print(to_move_right)
     to_move_left = []
     for cell in l_cells:
         if cell[2] > 6:
             cell.pop()
             to_move_left.append(cell)
-    
+            print(to_move_left)
+
+    #to move left will always be first index and move right is always the one that follows
+
+
     total_time_taken = 0
     for cell in to_move_right: 
         total_time_taken += move_c(arr, cell, 7, 1, 0)
     for cell in to_move_left:
         total_time_taken += move_c(arr, cell, 6, -1,0)
+
+    #index 0 is left operations, index 1 is right, index 3 is total time
+    balanceData = (to_move_left, to_move_right, total_time_taken)
     
     print("\nContainers to move to the left [port]:",to_move_left)
     print("Containers to move to the right [starboard]:",to_move_right)
     # print("Moved Containers: \n\n",arr)
     print(f"The estimated time of this balancing operation is {total_time_taken} minutes") # time estimation balancing
     log_file.write(f"{get_date_time()} The ship has been balanced according to the legal definition of balancing.\n") # log file balancing success
-    
+
+    print(balanceData)
+    return balanceData
 # Helper to balance_ship function
 # Returns false if the two sides of ship are balanced;; true otherwise.
 def check_unbalance(l_w, r_w): 
@@ -229,12 +243,15 @@ def move_c(arr, cell, loc, mod, time_taken):
         return time_taken + r(i) + c(cell_c) + 2 # take previous time taken + current container movement + (2 ship->truck) 
     # check that no column from cell_c to loc is completely full
     # if any are, move the top container out of the way
+
     for col in range(cell_c + mod, loc + mod, mod):
         curr_cell = arr[r(8)][c(col)]
         if curr_cell[0] != "UNUSED":
             time_taken = move_c(arr, curr_cell, col + mod, mod, time_taken)
     # get to loc column
     time_to_move = 0 # for minute calculations
+
+    # we should add this line to the tuple
     print(f"Move {cell[0]} container with weight {cell[1]} from [{i}, {cell_c}] in the ship to ", end = '') # instruction
     while cell_c != loc:
         if arr[r(i)][c(cell_c + mod)][0] == "UNUSED": # move mod column if possible

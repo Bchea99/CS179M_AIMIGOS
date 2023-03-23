@@ -192,6 +192,34 @@ def balance_or_transfer():
 
 #Passing in an array for the ship balancing functionality
 def ship_balance(arr):
+    for widget in frame.winfo_children():
+        widget.destroy()
+
+    # Create a label with the instructions
+    label_text = "Commence Balancing"
+    label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
+    label.grid(row=0, column=0, columnspan=12)
+
+    # create a new frame for the grid
+    grid_frame = tk.Frame(frame)
+    grid_frame.grid(row=1, column=0, sticky="nsew")
+
+    # create the grid
+    for row in range(8):
+        for col in range(12):
+            cell_name = f"Container {row}{col}"
+            cell = tk.Label(grid_frame, text=cell_name[:10], font=("Helvetica", 16), borderwidth=1, relief="solid")
+            cell.grid(row=row, column=col, sticky="nsew")
+
+     # configure the grid to expand and fill the remaining space
+    grid_frame.columnconfigure(0, weight=1)
+    for i in range(12):
+        grid_frame.columnconfigure(i, weight=1)
+    for i in range(9):
+        grid_frame.rowconfigure(i, weight=1)
+
+    order_of_operations()
+
 
     balance_ship(arr)
 
