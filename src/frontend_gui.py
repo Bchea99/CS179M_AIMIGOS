@@ -465,7 +465,7 @@ def add_comment():
     submit_button.pack(side="bottom")
 
 def main():
-    upload_manfiest()
+    program_start()
     root.mainloop()
 
 if __name__ == "__main__":
