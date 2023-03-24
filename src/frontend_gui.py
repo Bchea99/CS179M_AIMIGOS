@@ -237,7 +237,7 @@ def container_transfer():
     button_frame = tk.Frame(frame)
     button_frame.pack()
 
-    balance_button = tk.Button(button_frame, text="Unload", font=("Helvetica", 16), command=unload_operation)
+    balance_button = tk.Button(button_frame, text="Unload", font=("Helvetica", 16), command=lambda: unload_operation(file_arr))
     balance_button.pack(side=tk.RIGHT, padx=10)
 
     transfer_button = tk.Button(button_frame, text="Load", font=("Helvetica", 16), command=load_operation)
@@ -320,7 +320,7 @@ def load_operation():
                               command=load_instruction)
     submit_button.pack(pady=50)
 
-def unload_operation():
+def unload_operation(arr):
     for widget in frame.winfo_children():
         widget.destroy()
 
@@ -336,7 +336,7 @@ def unload_operation():
     # create the grid
     for row in range(8):
         for col in range(12):
-            cell_name = f"Container {row}{col}"
+            cell_name = arr[row][col]
             cell = tk.Label(grid_frame, text=cell_name[:10], font=("Helvetica", 16), borderwidth=1, relief="solid")
             cell.grid(row=row, column=col, sticky="nsew")
             cell.bind("<Button-1>", lambda event, name=cell_name: select_container(name))
@@ -370,7 +370,7 @@ def select_container(name):
 
     #Inserting functionality for unloading here assuming that we only select containers when unloading
 
-    moveDict = load_unload_ship(file_arr, "u", name)
+    moveDict = load_unload_ship(file_arr, "u", name[0])
 
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
                              command=lambda: order_of_operations(moveDict))
@@ -385,10 +385,12 @@ def order_of_operations(coords):
     operation = ""
     operations = []
     print(coords)
-        # we need to implement a check to see what coords are empty
-    for coord in coords[:-1]:
-        if coord['name'] != '':
-            validMoves.append(coord)
+    # we need to implement a check to see what coords are empty
+    if type(coords) != int:
+        for coord in coords[:-1]:
+            if coord['name'] != '':
+                validMoves.append(coord)
+
 
     for i in validMoves:
         ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"

@@ -130,7 +130,7 @@ def load_unload_ship(arr, op, name, weight=0):
         #needs to be rewritten
         #move_dict_R = move_c(arr, cell, 7, 1, 0, coord_list=[]) this is what it was in balancing
         move_dict = move_c(arr, [c_name, 0], -1, -1, 0,coord_list=[]) # loc == -1 to unload
-        print(f"The estimated time of this unload operation is {time_taken} minutes") # time estimation
+        #print(f"The estimated time of this unload operation is {time_taken} minutes") # time estimation
         log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n") # log file offloading
 
     return move_dict
