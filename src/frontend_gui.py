@@ -299,10 +299,16 @@ def load_operation():
         # start alternating the background color of the red cell
         alternate_color()
 
+    button_frame = tk.Frame(frame)
+    button_frame.pack()
+
+    back_button = tk.Button(button_frame, text="Back", font=("Helvetica", 16), command=balance_or_transfer)
+    back_button.pack(side=tk.LEFT, padx=10)
+
     # Create the Submit button
-    submit_button = tk.Button(frame, text="Submit", font=("Helvetica", 16),
+    submit_button = tk.Button(button_frame, text="Submit", font=("Helvetica", 16),
                               command=load_instruction)
-    submit_button.pack(pady=50)
+    submit_button.pack(side=tk.RIGHT,pady=50)
 
 def unload_operation():
     for widget in frame.winfo_children():
@@ -494,7 +500,7 @@ def add_comment():
     submit_button.pack(side="bottom")
 
 def main():
-    order_of_operations()
+    load_operation()
     root.mainloop()
 
 if __name__ == "__main__":
