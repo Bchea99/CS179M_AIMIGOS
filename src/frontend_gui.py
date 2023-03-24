@@ -432,7 +432,7 @@ def animation(coordinates):
         second = second_coords.pop(0)
 
     # Create a label with the instructions
-    label_text = "Move" + str(first) + "to" + str(next)
+    label_text = "Move" + str(first) + "to" + str(second)
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
     label.grid(row=0, column=0, columnspan=12)
 
