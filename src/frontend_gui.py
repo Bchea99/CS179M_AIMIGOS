@@ -375,8 +375,23 @@ def select_container(name):
 def order_of_operations(coords):
     for widget in frame.winfo_children():
         widget.destroy()
+        # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
 
-    operations = ["Move (2,1) to (2,3)", "Move (4,1) to (0,1)", "Move (X,Y) to (Z, Y)"]
+    validMoves = []
+    operation = ""
+    operations = []
+    print(coords)
+        # we need to implement a check to see what coords are empty
+    for coord in coords[:-1]:
+        if coord['name'] != '':
+            validMoves.append(coord)
+
+    for i in validMoves:
+        ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"
+        operations.append(ops)
+
+    print(operations)
+    #operations = ["Move (2,1) to (2,3)", "Move (4,1) to (0,1)", "Move (X,Y) to (Z, Y)"]
 
     label = tk.Label(frame, text="Order of operations:", font=("Helvetica", 18))
     label.pack()
@@ -395,13 +410,7 @@ def order_of_operations(coords):
     generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),
                              command=lambda: animation(coords))
     generate_animation.pack()
-def cycleCoords(coords):
-    coordinates = []
-    i = 1
-    for i in coords:
-        if type(i) == tuple:
-            coordinates.append(i)
-    return coordinates
+
 
 def animation(coordinates):
     for widget in frame.winfo_children():
@@ -432,7 +441,7 @@ def animation(coordinates):
 
 
 
-    first = first_coords.pop(len(valid_moves)-1)
+    first = first_coords.pop(len(validMoves)-1)
     second = second_coords.pop(len(validMoves)-1)
 
 
@@ -566,7 +575,7 @@ if __name__ == "__main__":
         'time_taken': 0,
         'time_to_move': 0
     }
-    valid_moves = []
+    validMoves = []
 
     root = tk.Tk()
     root.geometry(
