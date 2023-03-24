@@ -218,8 +218,9 @@ def ship_balance(arr):
     for i in range(9):
         grid_frame.rowconfigure(i, weight=1)
 
-    global balanceData
+    global balanceData #balanceData originall declared dict
     balanceData = balance_ship(arr)
+    #returns balanceData = (leftDictionary, rightDictionary, total_time_taken)
     #here balanceData is not a dictionary
     order_of_operations(balanceData)
 
@@ -370,7 +371,9 @@ def select_container(name):
 
     #Inserting functionality for unloading here assuming that we only select containers when unloading
 
+    #actual dictionary value received from here
     moveDict = load_unload_ship(file_arr, "u", name[0])
+    print(moveDict)
 
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
                              command=lambda: order_of_operations(moveDict))
@@ -381,12 +384,18 @@ def order_of_operations(coords):
         widget.destroy()
         # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
 
+    #Here we can receive two potential values as the argument:
+        # a tuple composed of the left and right dict vals (balancing)
+        # an actual dict val for the movement on a single page (unloading)
+
     validMoves = []
     operation = ""
     operations = []
     print(coords)
     # we need to implement a check to see what coords are empty
-    if type(coords) != int:
+    if type(coords) == dict:
+        validMoves.append(coords)
+    else:
         for coord in coords[:-1]:
             if coord['name'] != '':
                 validMoves.append(coord)
@@ -429,11 +438,15 @@ def animation(coordinates):
     # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
     global valid_moves
     validMoves = []
+
     print(coordinates)
-    # we need to implement a check to see what coords are empty
-    for coord in coordinates[:-1]:
-        if coord['name'] != '':
-            validMoves.append(coord)
+    if type(coordinates) == dict:
+        validMoves.append(coordinates)
+    else:# we need to implement a check to see what coords are empty
+        for coord in coordinates[:-1]:
+            if coord['name'] != '':
+                validMoves.append(coord)
+
 
     # list of first and second coords append dictionary values of first and next
     first_coords = []
