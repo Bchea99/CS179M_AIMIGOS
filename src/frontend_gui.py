@@ -416,28 +416,27 @@ def animation(coordinates):
     for widget in frame.winfo_children():
         widget.destroy()
 
-        # pops a list - might need a revision
-        # first_coords = coordinates.pop(0)
-        # second_coords = coordinates[0]
+    # pops a list - might need a revision
+    # first_coords = coordinates.pop(0)
+    # second_coords = coordinates[0]
 
-        # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
-        global valid_moves
-        validMoves = []
+    # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
+    global valid_moves
+    validMoves = []
+    print(coordinates)
+    # we need to implement a check to see what coords are empty
+    for coord in coordinates[:-1]:
+        if coord['name'] != '':
+            validMoves.append(coord)
 
-        print(coordinates)
-        # we need to implement a check to see what coords are empty
-        for coord in coordinates[:-1]:
-            if coord['name'] != '':
-                validMoves.append(coord)
-
-        # list of first and second coords append dictionary values of first and next
-        first_coords = []
-        second_coords = []
-        print(validMoves)
-        for i in validMoves:
-            first_coords.append(i['first'])
-            second_coords.append(i['next'])
-        print(validMoves)
+    # list of first and second coords append dictionary values of first and next
+    first_coords = []
+    second_coords = []
+    print(validMoves)
+    for i in validMoves:
+        first_coords.append(i['first'])
+        second_coords.append(i['next'])
+    print(validMoves)
 
 
 
@@ -488,8 +487,8 @@ def animation(coordinates):
         #lists of tuples
         #first_coords = first
         #second_coords = next
-        cell1 = grid_frame.grid_slaves(row=first[0], column=first[1])[0]  # Backend needs a way to find the position
-        cell2 = grid_frame.grid_slaves(row=second[0],column=second[1])[0]
+        cell1 = grid_frame.grid_slaves(row=8 - first[0], column=first[1]-1)[0]  # Backend needs a way to find the position
+        cell2 = grid_frame.grid_slaves(row=8 - second[0],column=second[1]-1)[0]
         old_color = cell1.cget("bg")
         new_color = "white" if old_color == "red" else "red"
         cell1.config(bg=new_color)
