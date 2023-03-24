@@ -88,7 +88,7 @@ def write_new_manifest(f_to_write, arr):
 # Load/Unload
 # 1 minute within ship, 2 minutes to truck, 4 minutes ship/buffer
 #this should return a tuple
-def load_unload_ship(arr, op):
+def load_unload_ship(arr, op, name, weight=0):
     move_dict = {
         'coord_list': [],
         'name': '',
@@ -97,12 +97,14 @@ def load_unload_ship(arr, op):
         'time_taken': 0,
         'time_to_move': 0
     }
+    c_name = name
+    weight = weight
 
     if op == "l": # load
 
         ##we don't need this
-        c_name = input("Enter exact name of container to load.\n-> ") # container name to move
-        c_weight = int(input("Enter weight of container\n-> ")) # container weight
+        #c_name = input("Enter exact name of container to load.\n-> ") # container name to move
+        #c_weight = int(input("Enter weight of container\n-> ")) # container weight
         cell_to_insert = [c_name, c_weight]
 
         # search for least time to insert
@@ -126,6 +128,7 @@ def load_unload_ship(arr, op):
     elif op == "u": # unload
         #c_name = input("Enter exact name of container to offload.\n-> ") # container name to move
         #needs to be rewritten
+        #move_dict_R = move_c(arr, cell, 7, 1, 0, coord_list=[]) this is what it was in balancing
         move_dict = move_c(arr, [c_name, 0], -1, -1, 0,coord_list=[]) # loc == -1 to unload
         print(f"The estimated time of this unload operation is {time_taken} minutes") # time estimation
         log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n") # log file offloading

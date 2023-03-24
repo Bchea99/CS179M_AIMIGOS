@@ -369,8 +369,8 @@ def select_container(name):
     back_button.pack()
 
     #Inserting functionality for unloading here assuming that we only select containers when unloading
-    global operation
-    moveDict = load_unload_ship(file_arr, op="u")
+
+    moveDict = load_unload_ship(file_arr, "u", name)
 
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
                              command=lambda: order_of_operations(moveDict))
