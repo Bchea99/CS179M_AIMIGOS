@@ -8,7 +8,7 @@ from datetime import datetime # for log file print
 
 # Log file setup
 log_file_to_write = "KeoghLongBeach" + str(datetime.now().year) + ".txt"
-log_file = open(log_file_to_write, "a") # log file variable in use in all functions
+log_file = open(log_file_to_write, "a+") # log file variable in use in all functions
 user_name = "123" # user who signs in, "123" signifies no previous user signed in (first run)
 
 #FUNCTION: all functions below
@@ -19,7 +19,7 @@ def log_file_init(): # determine if the user wants the log file restarted when p
         choice = input("Do you want to restart the log file? y for yes, n for no\n-> ")
     if choice == "y":
         open(log_file_to_write, 'w').close() # clear file
-    return
+    return log_file_to_write
 
 # Helper with log file printing [Month Day, Year:] (no appending space)
 def get_date_time():
@@ -31,13 +31,13 @@ def log_file_change_user():
         log_file.write(f"{get_date_time()} {user_name} signs out\n")
     user_name = input("Enter the name of the User to sign in\n-> ") # new user
     log_file.write(f"{get_date_time()} {user_name} signs in\n")
-    return
+    return log_file
 
 def log_file_enter_comment():
     global log_file
     comment = input("Enter comment to append to log file\n-> ")
     log_file.write(f"{get_date_time()} {comment}\n")
-    return
+    return log_file
 
 def manifest_init():
     file_name = input("Enter the name of the manifest file. Example: SSMajestic.txt\n-> ")
@@ -57,7 +57,7 @@ def manifest_init():
         if vals[2] > 0:
             container_cnt += 1
     log_file.write(f"{get_date_time()} Manifest {file_name} is opened, there are {container_cnt} containers on the ship\n") # log file open manifest message
-    print(arr)
+    #print(arr)
     
     return new_filename, arr
 
@@ -75,11 +75,12 @@ def write_new_manifest(f_to_write, arr):
     f.close()
     # log file manifest finished 
     log_file.write(f"{get_date_time()} Finished a Cycle. Manifest {f_to_write} was written to desktop, and a reminder pop-up to operator to send file was displayed." + "\n") 
-    return
+    return 
 
 # Load/Unload
 # 1 minute within ship, 2 minutes to truck, 4 minutes ship/buffer
 def load_unload_ship(arr, op):
+    time_taken = -1
     if op == "l": # load 
         c_name = input("Enter exact name of container to load.\n-> ") # container name to move
         c_weight = int(input("Enter weight of container\n-> ")) # container weight
@@ -98,15 +99,16 @@ def load_unload_ship(arr, op):
                 least_time = curr_time
                 best_loc = [i, col]
         arr[r(best_loc[0])][c(best_loc[1])] = cell_to_insert # optimal location to place container [time]
-        print(f"The estimated time of this load operation is {least_time+2} minutes") # time estimation, +2 from truck -> ship
+        time_taken = least_time + 2
+        print(f"The estimated time of this load operation is {time_taken} minutes") # time estimation, +2 from truck -> ship
         print(f"Move {c_name} container with weight {c_weight} from the truck to [{best_loc[0]}, {best_loc[1]}] on the ship.") # instruction
         log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n") # log file onloading
     elif op == "u": # unload 
         c_name = input("Enter exact name of container to offload.\n-> ") # container name to move
-        time_taken = move_c(arr, [c_name, 0], -1, -1, 0) # loc == -1 to unload
+        time_taken = move_c(arr, [c_name, 0], -1, -1, 0, []) # loc == -1 to unload
         print(f"The estimated time of this unload operation is {time_taken} minutes") # time estimation
         log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n") # log file offloading
-    return
+    return arr, time_taken
 
 # Balance ship: Heavier side of ship is no more than 10%
 # weight of lighter side
@@ -149,7 +151,7 @@ def balance_ship(arr):
             time_taken = perform_sift(arr)
             print(f"The estimated time of this SIFT operation is {time_taken} minutes") # time estimation
             log_file.write(f"{get_date_time()} SIFT has been completed.\n") # log file balancing fail
-            return
+            return arr, time_taken
     
     # Balance is possible, determine which cells have to move to the other side
     to_move_right = []
@@ -165,16 +167,19 @@ def balance_ship(arr):
     
     total_time_taken = 0
     for cell in to_move_right: 
-        total_time_taken += move_c(arr, cell, 7, 1, 0)
+        coord_list, time_taken = move_c(arr, cell, 7, 1, 0,[])
+        total_time_taken += time_taken
     for cell in to_move_left:
-        total_time_taken += move_c(arr, cell, 6, -1,0)
-    
+        coord_list, time_taken = move_c(arr, cell, 6, -1,0,[])
+        total_time_taken += time_taken
+        
     print("\nContainers to move to the left [port]:",to_move_left)
     print("Containers to move to the right [starboard]:",to_move_right)
     # print("Moved Containers: \n\n",arr)
     print(f"The estimated time of this balancing operation is {total_time_taken} minutes") # time estimation balancing
     log_file.write(f"{get_date_time()} The ship has been balanced according to the legal definition of balancing.\n") # log file balancing success
-    
+    return arr, total_time_taken
+
 # Helper to balance_ship function
 # Returns false if the two sides of ship are balanced;; true otherwise.
 def check_unbalance(l_w, r_w): 
@@ -189,8 +194,10 @@ def check_unbalance(l_w, r_w):
 # if loc is -1, cell is to be unloaded (removed from ship array)
 # time_taken is minutes the operation has taken so far, saved and added to in recursive calls.
 # 1 minute within ship, 2 minutes ship <-> truck, 4 minutes ship <-> buffer
-def move_c(arr, cell, loc, mod, time_taken):
+# coord list is a list of coords this container has moved through
+def move_c(arr, cell, loc, mod, time_taken, coord_list):
     row_c,cell_c = find_cell(arr, cell) # get cell's index
+    j = cell_c # orginal cell column
     i = 8 # current row number
     while i != row_c: # loop down row to cell, move other containers out of the way
         curr_cell = arr[r(i)][c(cell_c)]
@@ -198,7 +205,7 @@ def move_c(arr, cell, loc, mod, time_taken):
             out_bound = -1
             if (cell_c - mod <= 0) or (cell_c - mod >= 13): # so recurs loc doesn't go out of bounds
                 out_bound = 1
-            time_taken = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken)
+            time_taken = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
         i -= 1
     # here, access to container with nothing above, time to move to loc column
     # make current cell UNUSED
@@ -212,7 +219,7 @@ def move_c(arr, cell, loc, mod, time_taken):
     for col in range(cell_c + mod, loc + mod, mod):
         curr_cell = arr[r(8)][c(col)]
         if curr_cell[0] != "UNUSED":
-            time_taken = move_c(arr, curr_cell, col + mod, mod, time_taken)
+            coord_list, time_taken = move_c(arr, curr_cell, col + mod, mod, time_taken, coord_list)
     # get to loc column
     time_to_move = 0 # for minute calculations
     print(f"Move {cell[0]} container with weight {cell[1]} from [{i}, {cell_c}] in the ship to ", end = '') # instruction
@@ -229,7 +236,7 @@ def move_c(arr, cell, loc, mod, time_taken):
     # place the cell at [i, cell_c]
     arr[r(i)][c(cell_c)] = cell
     print(f"[{i}, {cell_c}] in the ship.") # instruction
-    return time_taken + time_to_move # cell has been successfully moved, return time
+    return coord_list + [(row_c, j)] + [(i, cell_c)], time_taken + time_to_move # cell has been successfully moved, return time
 
 # Helper for move_c to return arr index of cell
 # cell is guaranteed to be in arr
@@ -283,32 +290,33 @@ def perform_sift(arr):
 
 # MAIN: method below
 # Log file initialization
-log_file_init()
-log_file_change_user()
+if __name__ == "__main__":
+    log_file_init()
+    log_file_change_user()
 
-# READ: the manifest file
-new_filename, arr = manifest_init()
+    # READ: the manifest file
+    new_filename, arr = manifest_init()
 
-while(1):
-    op = input("l for load, u for unload, b for balance, s for change user, c for adding user comment to log file, p for finishing the current manifest and open a new one, q for quit.\n-> ")
-    if op == "l" or op == "u":
-        load_unload_ship(arr, op)
-    elif op == "b":
-        balance_ship(arr)
-    elif op == "s":
-        log_file_change_user()
-    elif op == "c":
-        log_file_enter_comment()
-    elif op == "p":
-        write_new_manifest(new_filename, arr)
-        new_filename, arr = manifest_init()
-    elif op == "q":
-        # create updated manifest file
-        # log file write that cycle has finished
-        write_new_manifest(new_filename, arr)
-        log_file.write(f"{get_date_time()} {user_name} signs out\n")
-        log_file.close()
-        break
+    while(1):
+        op = input("l for load, u for unload, b for balance, s for change user, c for adding user comment to log file, p for finishing the current manifest and open a new one, q for quit.\n-> ")
+        if op == "l" or op == "u":
+            load_unload_ship(arr, op)
+        elif op == "b":
+            balance_ship(arr)
+        elif op == "s":
+            log_file_change_user()
+        elif op == "c":
+            log_file_enter_comment()
+        elif op == "p":
+            write_new_manifest(new_filename, arr)
+            new_filename, arr = manifest_init()
+        elif op == "q":
+            # create updated manifest file
+            # log file write that cycle has finished
+            write_new_manifest(new_filename, arr)
+            log_file.write(f"{get_date_time()} {user_name} signs out\n")
+            log_file.close()
+            break
 
-    print(arr)
+        print(arr)
 
