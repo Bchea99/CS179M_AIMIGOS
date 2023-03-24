@@ -190,18 +190,41 @@ def balance_ship(arr):
             print(to_move_left)
 
     total_time_taken = 0
-    moveC_R = (coord=[],first=[],second=[],0,0)
-    moveC_L = (coord=[],first=[],second=[],0,0)
-    for cell in to_move_right: 
+
+    move_dict_L = {
+        'coord_list': [],
+        'name': '',
+        'first': (),
+        'next': (),
+        'time_taken': 0,
+        'time_to_move': 0
+    }
+    move_dict_R = {
+        'coord_list': [],
+        'name': '',
+        'first': (),
+        'next': (),
+        'time_taken': 0,
+        'time_to_move': 0
+    }
+
+
+    for cell in to_move_right:
         #total_time_taken += move_c(arr, cell, 7, 1, 0)
-        moveC_R = move_c(arr, cell, 7, 1, 0,coord_list=[])
+        move_dict_R = move_c(arr, cell, 7, 1, 0, coord_list=[])
     for cell in to_move_left:
         #total_time_taken += move_c(arr, cell, 6, -1,0)
-        moveC_L = move_c(arr, cell, 6, -1, 0,coord_list=[])
+        move_dict_L = move_c(arr, cell, 6, -1, 0, coord_list=[])
 
     #index 0 is left operations, index 1 is right, index 3 is total time
-    total_time_taken = moveC_L[4] + moveC_R[4]
-    balanceData = (moveC_L, moveC_R, total_time_taken)
+    print(type(move_dict_L['time_taken']))
+    print(type(move_dict_R['time_taken']))
+    rtime = int(move_dict_R['time_taken'])
+    ltime = move_dict_L['time_taken']
+    print(rtime)
+    print(ltime)
+    #total_time_taken = move_dict_L['time_taken'] + move_dict_R['time_taken']
+    balanceData = (move_dict_L, move_dict_R, total_time_taken)
 
     print("\nContainers to move to the left [port]:",to_move_left)
     print("Containers to move to the right [starboard]:",to_move_right)
@@ -254,6 +277,7 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
     # get to loc column
     time_to_move = 0 # for minute calculations
     print(f"Move {cell[0]} container with weight {cell[1]} from [{i}, {cell_c}] in the ship to ", end = '') # instruction
+    name = cell[0]
     while cell_c != loc:
         if arr[r(i)][c(cell_c + mod)][0] == "UNUSED": # move mod column if possible
             cell_c += mod
@@ -266,9 +290,20 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
         time_to_move += 1 # +1 minute each row gone down
     # place the cell at [i, cell_c]
     arr[r(i)][c(cell_c)] = cell
+
+    moveDict ={
+        "prev_coords": coord_list,
+        "name": name,
+        "current": (row_c, j),
+        "next": (i, cell_c),
+        "time_taken": time_taken,
+        "time_to_move": time_to_move
+    }
+
     print(f"[{i}, {cell_c}] in the ship.") # instruction
-    moveTuple = (coord_list, (row_c, j), (i, cell_c), time_taken, time_to_move)
-    return moveTuple #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
+    #moveTuple = (coord_list, name, (row_c, j), (i, cell_c), time_taken, time_to_move)
+    print(moveDict)
+    return moveDict #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
 
 # Helper for move_c to return arr index of cell
 # cell is guaranteed to be in arr

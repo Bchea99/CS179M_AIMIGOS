@@ -217,10 +217,11 @@ def ship_balance(arr):
         grid_frame.columnconfigure(i, weight=1)
     for i in range(9):
         grid_frame.rowconfigure(i, weight=1)
-    global moveTuple
-    moveTuple = balance_ship(arr)
 
-    order_of_operations(moveTuple)
+    global balanceData
+    balanceData = balance_ship(arr)
+
+    order_of_operations(balanceData)
 
 
 
@@ -385,10 +386,17 @@ def order_of_operations(coords):
         label.pack()
 
     #gotta find a way to get coordinates in here
-    coords = cycleCoords(coords)
+    #coords = cycleCoords(coords)
 
+    #Here we store the coordinates as tuples
     coordinates = coords
     print(coordinates)
+
+    for i in coordinates:
+        if type(i[1]) != str:
+            print("empty")
+        else:
+            print("valid")
 
 
     # here we take in back end coordinates
@@ -397,8 +405,9 @@ def order_of_operations(coords):
     generate_animation.pack()
 def cycleCoords(coords):
     coordinates = []
+    i = 1
     for i in coords:
-        if type(i) == list:
+        if type(i) == tuple:
             coordinates.append(i)
     return coordinates
 
@@ -525,7 +534,7 @@ if __name__ == "__main__":
     file_name = "KeoghLongBeach.txt" #global file_name that should be converted into array
     file_arr = []
     operation = "string"
-    moveTuple = ("name",0,)
+    balanceData = ()
 
     root = tk.Tk()
     root.geometry(
