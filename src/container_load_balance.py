@@ -217,13 +217,9 @@ def balance_ship(arr):
         move_dict_L = move_c(arr, cell, 6, -1, 0, coord_list=[])
 
     #index 0 is left operations, index 1 is right, index 3 is total time
-    print(type(move_dict_L['time_taken']))
-    print(type(move_dict_R['time_taken']))
-    rtime = int(move_dict_R['time_taken'])
-    ltime = move_dict_L['time_taken']
-    print(rtime)
-    print(ltime)
-    #total_time_taken = move_dict_L['time_taken'] + move_dict_R['time_taken']
+
+
+    total_time_taken = move_dict_L['time_to_move'] + move_dict_R['time_to_move']
     balanceData = (move_dict_L, move_dict_R, total_time_taken)
 
     print("\nContainers to move to the left [port]:",to_move_left)
@@ -294,7 +290,7 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
     moveDict ={
         "prev_coords": coord_list,
         "name": name,
-        "current": (row_c, j),
+        "first": (row_c, j),
         "next": (i, cell_c),
         "time_taken": time_taken,
         "time_to_move": time_to_move

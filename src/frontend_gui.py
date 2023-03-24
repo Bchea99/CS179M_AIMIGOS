@@ -220,7 +220,7 @@ def ship_balance(arr):
 
     global balanceData
     balanceData = balance_ship(arr)
-
+    #here balanceData is not a dictionary
     order_of_operations(balanceData)
 
 
@@ -389,19 +389,11 @@ def order_of_operations(coords):
     #coords = cycleCoords(coords)
 
     #Here we store the coordinates as tuples
-    coordinates = coords
-    print(coordinates)
-
-    for i in coordinates:
-        if type(i[1]) != str:
-            print("empty")
-        else:
-            print("valid")
-
-
+    #dict(coordinates) = coords
+    #oordinates.append()
     # here we take in back end coordinates
     generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),
-                             command=lambda: animation(coordinates))
+                             command=lambda: animation(coords))
     generate_animation.pack()
 def cycleCoords(coords):
     coordinates = []
@@ -414,9 +406,33 @@ def cycleCoords(coords):
 def animation(coordinates):
     for widget in frame.winfo_children():
         widget.destroy()
-        # Create a label with the instructions
 
-    label_text = "Move (2,1) to (2,3)"
+        # pops a list - might need a revision
+        # first_coords = coordinates.pop(0)
+        # second_coords = coordinates[0]
+
+        # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
+        validMoves = []
+
+        print(coordinates)
+        # we need to implement a check to see what coords are empty
+        for coord in coordinates[:-1]:
+            if coord['name'] != '':
+                validMoves.append(coord)
+
+        # list of first and second coords append dictionary values of first and next
+        first_coords = []
+        second_coords = []
+        print(validMoves)
+        for i in validMoves:
+            first_coords.append(i['first'])
+            second_coords.append(i['next'])
+
+        first = first_coords.pop(0)
+        second = second_coords.pop(0)
+
+    # Create a label with the instructions
+    label_text = "Move" + str(first) + "to" + str(next)
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
     label.grid(row=0, column=0, columnspan=12)
 
@@ -438,9 +454,9 @@ def animation(coordinates):
     for i in range(9):
         grid_frame.rowconfigure(i, weight=1)
 
-    first_coords = coordinates.pop(0)
-    second_coords = coordinates[0]
-    if len(coordinates) != 1:
+
+
+    if len(validMoves) != 1:
         # create the continue button
         continue_button = tk.Button(frame, text="Next", font=("Helvetica", 16),
                                     command= lambda: animation(coordinates))
@@ -453,13 +469,16 @@ def animation(coordinates):
 
     # function to alternate the background color of the red cell
     def alternate_color():
-        cell1 = grid_frame.grid_slaves(row=first_coords[0], column=first_coords[1])[0]  # Backend needs a way to find the position
-        cell2 = grid_frame.grid_slaves(row=second_coords[0],column=second_coords[1])[0]
+        #lists of tuples
+        #first_coords = first
+        #second_coords = next
+        cell1 = grid_frame.grid_slaves(row=first[0], column=first[1])[0]  # Backend needs a way to find the position
+        cell2 = grid_frame.grid_slaves(row=second[0],column=second[1])[0]
         old_color = cell1.cget("bg")
         new_color = "white" if old_color == "red" else "red"
         cell1.config(bg=new_color)
         cell2.config(bg=old_color)
-        root.after(1000, alternate_color)  # schedule the function to run again in 1000 milliseconds (1 second)
+        root.after(100000, alternate_color())  # schedule the function to run again in 1000 milliseconds (1 second)
 
     # start alternating the background color of the red cell
     alternate_color()
@@ -534,7 +553,14 @@ if __name__ == "__main__":
     file_name = "KeoghLongBeach.txt" #global file_name that should be converted into array
     file_arr = []
     operation = "string"
-    balanceData = ()
+    balanceData = {
+        'coord_list': [],
+        'name': '',
+        'first': (),
+        'next': (),
+        'time_taken': 0,
+        'time_to_move': 0
+    }
 
     root = tk.Tk()
     root.geometry(
