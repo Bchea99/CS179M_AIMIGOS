@@ -183,7 +183,7 @@ def balance_or_transfer():
     button_frame = tk.Frame(frame)
     button_frame.pack()
 
-    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command=lambda:ship_balance(file_arr))
+    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command=lambda: ship_balance(file_arr))
                                #command=ship_balance)
     balance_button.pack(side=tk.RIGHT, padx=10)
 
@@ -368,8 +368,12 @@ def select_container(name):
                              command=unload_operation)
     back_button.pack()
 
+    #Inserting functionality for unloading here assuming that we only select containers when unloading
+    global operation
+    moveDict = load_unload_ship(file_arr, op="u")
+
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
-                             command=order_of_operations)
+                             command=lambda: order_of_operations(moveDict))
     generate_order.pack()
 
 def order_of_operations(coords):

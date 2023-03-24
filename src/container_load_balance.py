@@ -89,8 +89,15 @@ def write_new_manifest(f_to_write, arr):
 # 1 minute within ship, 2 minutes to truck, 4 minutes ship/buffer
 #this should return a tuple
 def load_unload_ship(arr, op):
+    move_dict = {
+        'coord_list': [],
+        'name': '',
+        'first': (),
+        'next': (),
+        'time_taken': 0,
+        'time_to_move': 0
+    }
 
-    opTuple = ("name", 1)
     if op == "l": # load
 
         ##we don't need this
@@ -117,15 +124,13 @@ def load_unload_ship(arr, op):
         log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n") # log file onloading
 
     elif op == "u": # unload
-
-        c_name = input("Enter exact name of container to offload.\n-> ") # container name to move
-
+        #c_name = input("Enter exact name of container to offload.\n-> ") # container name to move
         #needs to be rewritten
-        time_taken = move_c(arr, [c_name, 0], -1, -1, 0) # loc == -1 to unload
+        move_dict = move_c(arr, [c_name, 0], -1, -1, 0,coord_list=[]) # loc == -1 to unload
         print(f"The estimated time of this unload operation is {time_taken} minutes") # time estimation
         log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n") # log file offloading
 
-    return opTuple
+    return move_dict
 
 # Balance ship: Heavier side of ship is no more than 10%
 # weight of lighter side
@@ -136,9 +141,6 @@ def balance_ship(arr):
     r_cells = []
     l_w = 0
     r_w = 0
-    cells_left = []
-    moveTuple = ("name", r_cells, l_cells)
-
 
     for i in range(1,9):
         for j in range(1,13):
@@ -245,6 +247,7 @@ def check_unbalance(l_w, r_w):
 # time_taken is minutes the operation has taken so far, saved and added to in recursive calls.
 # 1 minute within ship, 2 minutes ship <-> truck, 4 minutes ship <-> buffer
 # coord list is a list of coords this container has moved through
+# returns a movement dictionary for a cell
 def move_c(arr, cell, loc, mod, time_taken, coord_list):
     row_c,cell_c = find_cell(arr, cell) # get cell's index
     j = cell_c # orginal cell column
@@ -297,8 +300,6 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
     }
 
     print(f"[{i}, {cell_c}] in the ship.") # instruction
-    #moveTuple = (coord_list, name, (row_c, j), (i, cell_c), time_taken, time_to_move)
-    print(moveDict)
     return moveDict #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
 
 # Helper for move_c to return arr index of cell
