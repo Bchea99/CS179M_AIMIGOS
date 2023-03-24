@@ -375,8 +375,23 @@ def select_container(name):
 def order_of_operations(coords):
     for widget in frame.winfo_children():
         widget.destroy()
+        # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
 
-    operations = ["Move (2,1) to (2,3)", "Move (4,1) to (0,1)", "Move (X,Y) to (Z, Y)"]
+    validMoves = []
+    operation = ""
+    operations = []
+    print(coords)
+        # we need to implement a check to see what coords are empty
+    for coord in coords[:-1]:
+        if coord['name'] != '':
+            validMoves.append(coord)
+
+    for i in validMoves:
+        ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"
+        operations.append(ops)
+
+    print(operations)
+    #operations = ["Move (2,1) to (2,3)", "Move (4,1) to (0,1)", "Move (X,Y) to (Z, Y)"]
 
     label = tk.Label(frame, text="Order of operations:", font=("Helvetica", 18))
     label.pack()
@@ -395,13 +410,7 @@ def order_of_operations(coords):
     generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),
                              command=lambda: animation(coords))
     generate_animation.pack()
-def cycleCoords(coords):
-    coordinates = []
-    i = 1
-    for i in coords:
-        if type(i) == tuple:
-            coordinates.append(i)
-    return coordinates
+
 
 def animation(coordinates):
     for widget in frame.winfo_children():
@@ -412,6 +421,7 @@ def animation(coordinates):
         # second_coords = coordinates[0]
 
         # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
+        global valid_moves
         validMoves = []
 
         print(coordinates)
@@ -427,9 +437,13 @@ def animation(coordinates):
         for i in validMoves:
             first_coords.append(i['first'])
             second_coords.append(i['next'])
+        print(validMoves)
 
-        first = first_coords.pop(0)
-        second = second_coords.pop(0)
+
+
+    first = first_coords.pop(len(validMoves)-1)
+    second = second_coords.pop(len(validMoves)-1)
+
 
     # Create a label with the instructions
     label_text = "Move" + str(first) + "to" + str(second)
@@ -478,7 +492,7 @@ def animation(coordinates):
         new_color = "white" if old_color == "red" else "red"
         cell1.config(bg=new_color)
         cell2.config(bg=old_color)
-        root.after(100000, alternate_color())  # schedule the function to run again in 1000 milliseconds (1 second)
+        root.after(1000, alternate_color)  # schedule the function to run again in 1000 milliseconds (1 second)
 
     # start alternating the background color of the red cell
     alternate_color()
@@ -561,6 +575,7 @@ if __name__ == "__main__":
         'time_taken': 0,
         'time_to_move': 0
     }
+    validMoves = []
 
     root = tk.Tk()
     root.geometry(
