@@ -207,7 +207,7 @@ def ship_balance(arr):
     # create the grid
     for row in range(8):
         for col in range(12):
-            cell_name = f"Container {row}{col}"
+            cell_name = arr[row][col]
             cell = tk.Label(grid_frame, text=cell_name[:10], font=("Helvetica", 16), borderwidth=1, relief="solid")
             cell.grid(row=row, column=col, sticky="nsew")
 
@@ -454,11 +454,13 @@ def animation(coordinates):
     grid_frame = tk.Frame(frame)
     grid_frame.grid(row=1, column=0, sticky="nsew")
 
+    global file_arr
 
     # create the grid
     for row in range(8):
         for col in range(12):
-                cell = tk.Label(grid_frame, text="Test", font=("Helvetica", 16), borderwidth=1, relief="solid")
+                container_name = file_arr[row][col][0]
+                cell = tk.Label(grid_frame, text=container_name, font=("Helvetica", 16), borderwidth=1, relief="solid")
                 cell.grid(row=row, column=col, sticky="nsew")
 
     # configure the grid to expand and fill the remaining space
