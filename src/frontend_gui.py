@@ -199,6 +199,8 @@ def upload_manifest():
             file_arr = manifest_init(file_path)  # txt file passed into manifest_init to be transformed
             global current_manifest
             current_manifest = file_name
+            global outboundFile
+            outboundFile = current_manifest.rstrip(".txt") + "OUTBOUND.txt"
             # into arr
             num_containers = count_containers(file_arr)
             write_to_log_file(f"Manifest {file_name} is opened, there are {num_containers} containers on the ship", log_file_to_write)
@@ -219,11 +221,6 @@ def balance_or_transfer():
 
     button_frame = tk.Frame(frame)
     button_frame.pack()
-
-    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command=lambda: ship_balance(file_arr))
-                               #command=ship_balance)
-    balance_button.pack(side=tk.RIGHT, padx=10)
-
     def finished_cycle():
         global outboundFile
         write_new_manifest(outboundFile,file_arr)
@@ -233,6 +230,12 @@ def balance_or_transfer():
 
     manifest_button = tk.Button(button_frame, text="Finish", font=("Helvetica", 16), command=finished_cycle)
     manifest_button.pack(side=tk.RIGHT, padx=10)
+
+    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command=lambda: ship_balance(file_arr))
+                               #command=ship_balance)
+    balance_button.pack(side=tk.RIGHT, padx=10)
+
+
 
     transfer_button = tk.Button(button_frame, text="Start a transfer", font=("Helvetica", 16), command=container_transfer)
     transfer_button.pack(side=tk.LEFT, padx=10)
@@ -429,13 +432,6 @@ def unload_operation(arr):
             cell = tk.Label(grid_frame, text=cell_name[:10], font=("Helvetica", 16), borderwidth=1, relief="solid")
             cell.grid(row=row, column=col, sticky="nsew")
             cell.bind("<Button-1>", lambda event, name=cell_name: select_container(name))
-
-    # configure the grid to expand and fill the remaining space
-    grid_frame.columnconfigure(0, weight=1)
-    for i in range(12):
-        grid_frame.columnconfigure(i, weight=1)
-    for i in range(9):
-        grid_frame.rowconfigure(i, weight=1)
 
     # create the continue button
     continue_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
