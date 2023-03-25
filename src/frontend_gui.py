@@ -194,7 +194,7 @@ def upload_manifest():
             global file_arr
             file_arr = manifest_init(file_path)  # txt file passed into manifest_init to be transformed
             global current_manifest
-            current_manifest = file_name
+            current_manifest = file_name.rstrip(".txt")
             # into arr
             num_containers = count_containers(file_arr)
             write_to_log_file(f"Manifest {file_name} is opened, there are {num_containers} containers on the ship", log_file_to_write)
@@ -221,7 +221,7 @@ def balance_or_transfer():
     balance_button.pack(side=tk.RIGHT, padx=10)
 
     def finished_cycle():
-        write_to_log_file(f"Finished a cycle. Manifest {current_manifest} was written to desktop, and reminder popup to operator"
+        write_to_log_file(f"Finished a cycle. Manifest {current_manifest}OUTBOUND.txt was written to desktop, and reminder popup to operator"
                           f" to send file was displayed.",log_file_to_write)
         upload_manifest()
 
