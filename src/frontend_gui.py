@@ -393,7 +393,7 @@ def select_container(name):
     #Inserting functionality for unloading here assuming that we only select containers when unloading
 
     #actual dictionary value received from here
-    moveDict = load_unload_ship(file_arr, "u", name[0])
+    moveDict = unload(file_arr, name[0])
     print(moveDict)
 
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
