@@ -11,7 +11,11 @@ today = datetime.date.today()
 current_year = today.year
 full_name = ""
 previous_instructions = []
-
+# Log file setup
+log_file_to_write = ""
+current_container = ""
+current_operation = ""
+current_manifest = ""
 
 #frame 0
 def program_start():
@@ -72,7 +76,10 @@ def create_new_log_file():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    welcome_label = tk.Label(frame, text="Creating default log file named 'KeoghLongBeach.txt'."
+    global log_file_to_write
+    log_file_to_write = 'KeoghLongBeach.txt'
+
+    welcome_label = tk.Label(frame, text=f"Creating default log file named '{log_file_to_write}'."
                                          "\nWould you like to append the current year?"
                                          f"\nCurrent Year: {current_year} ", font=("Helvetica", 18))
     welcome_label.pack(pady=50)
@@ -93,11 +100,14 @@ def yes_append_year():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    welcome_label = tk.Label(frame, text=f"Created default log file 'KeoghLongBeach{current_year}.txt'.", font=("Helvetica", 18))
+    global log_file_to_write
+    log_file_to_write = f'KeoghLongBeach{current_year}.txt'
+
+    welcome_label = tk.Label(frame, text=f"Created default log file '{log_file_to_write}'.", font=("Helvetica", 18))
     welcome_label.pack(pady=50)
 
     # Continue
-    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manfiest)
+    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
     continue_button.pack(pady=50)
 
 def no_append_year():
@@ -109,7 +119,7 @@ def no_append_year():
     welcome_label.pack(pady=50)
 
     # Continue
-    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manfiest)
+    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
     continue_button.pack(pady=50)
 
 def resume():
@@ -131,7 +141,10 @@ def load_existing_log_file():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    welcome_label = tk.Label(frame, text=f"Using default log file 'KeoghLongBeach{current_year}.txt'.",
+    global log_file_to_write
+    log_file_to_write = f'KeoghLongBeach{current_year}.txt'
+
+    welcome_label = tk.Label(frame, text=f"Using default log file {log_file_to_write}.",
                              font=("Helvetica", 18))
     welcome_label.pack(pady=50)
 
@@ -142,7 +155,7 @@ def load_existing_log_file():
     back_button = tk.Button(button_frame, text="Back", font=("Helvetica", 16), command=start_a_new_log_file_prompt)
     back_button.pack(side=tk.LEFT, padx=10)
 
-    continue_button = tk.Button(button_frame, text="Continue", font=("Helvetica", 16), command=upload_manfiest)
+    continue_button = tk.Button(button_frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
     continue_button.pack(side=tk.LEFT, padx=10, pady=50)
 
 def shorten_file(filename):
@@ -151,7 +164,7 @@ def shorten_file(filename):
 
 #takes file input
 #frame 4
-def upload_manfiest():
+def upload_manifest():
     for widget in frame.winfo_children():
         widget.destroy()
 
@@ -176,7 +189,12 @@ def upload_manfiest():
             print(file_name)
             root.title("Mainfest: " + file_name)
             global file_arr
-            file_arr = manifest_init(file_path)  # txt file passed into manifest_init to be transformed into arr
+            file_arr = manifest_init(file_path)  # txt file passed into manifest_init to be transformed
+            global current_manifest
+            current_manifest = file_name
+            # into arr
+            num_containers = count_containers(file_arr)
+            write_to_log_file(f"Manifest {file_name} is opened, there are {num_containers} containers on the ship", log_file_to_write)
 
     continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=balance_or_transfer)
     button = tk.Button(frame, text="Select File", command=browse_file)
@@ -198,8 +216,13 @@ def balance_or_transfer():
                                #command=ship_balance)
     balance_button.pack(side=tk.RIGHT, padx=10)
 
-    manifest_button = tk.Button(button_frame, text="Upload another manifest file", font=("Helvetica", 16), command=upload_manfiest)
-    manifest_button.pack(side=tk.LEFT, padx=10)
+    def finished_cycle():
+        write_to_log_file(f"Finished a cycle. Manifest {current_manifest} was written to desktop, and reminder popup to operator"
+                          f" to send file was displayed.",log_file_to_write)
+        upload_manifest()
+
+    manifest_button = tk.Button(button_frame, text="Finish", font=("Helvetica", 16), command=finished_cycle)
+    manifest_button.pack(side=tk.RIGHT, padx=10)
 
     transfer_button = tk.Button(button_frame, text="Start a transfer", font=("Helvetica", 16), command=container_transfer)
     transfer_button.pack(side=tk.LEFT, padx=10)
@@ -262,6 +285,9 @@ def container_transfer():
 def load_operation():
     for widget in frame.winfo_children():
         widget.destroy()
+
+    global current_operation
+    current_operation = "onloaded"
 
     # Create a label with the instructions
     label_text = "Please enter the information of the container you would like to load"
@@ -346,6 +372,9 @@ def unload_operation(arr):
     for widget in frame.winfo_children():
         widget.destroy()
 
+    global current_operation
+    current_operation = "offloaded"
+
     # Create a label with the instructions
     label_text = "Please select the container to unload"
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
@@ -395,6 +424,9 @@ def select_container(name):
     #actual dictionary value received from here
     moveDict = load_unload_ship(file_arr, "u", name[0])
     print(moveDict)
+
+    global current_container
+    current_container = name
 
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
                              command=lambda: order_of_operations(moveDict))
@@ -529,6 +561,10 @@ def animation(coordinates):
     def next():
         animation(coordinates)
 
+    def finish():
+        write_to_log_file(f"{current_container} is {current_operation}", log_file_to_write)
+        balance_or_transfer()
+
     if len(coordinates) != 1:
         root.bind("<space>", lambda event: animation(coordinates))
         # create the continue button
@@ -550,7 +586,7 @@ def animation(coordinates):
 
         # create the continue button
         finish_button = tk.Button(frame, text="Done (Spacebar)", font=("Helvetica", 16),
-                                    command=balance_or_transfer)
+                                    command=finish)
         finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
 
 
@@ -587,7 +623,12 @@ def input_name():
         global full_name
         full_name = full_name_entry.get()
         print("Name:", full_name)
+        if log_file_to_write != "":
+            write_to_log_file(f"{full_name} signs in", log_file_to_write)
         username_prompt.destroy() # Close the prompt window after submission
+
+    if log_file_to_write != "" :
+        write_to_log_file(f"{full_name} signs out", log_file_to_write)
 
     username_prompt = tk.Tk()
 
@@ -625,7 +666,7 @@ def input_name():
 def add_comment():
     def submit_comment():
         comment = comment_entry.get("1.0",tk.END)
-        print("Comment:", comment)
+        write_to_log_file(comment,log_file_to_write)
         comment_prompt.destroy() # Close the prompt window after submission
 
     comment_prompt = tk.Tk()
