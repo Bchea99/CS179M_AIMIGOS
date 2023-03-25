@@ -19,7 +19,9 @@ current_manifest = ""
 
 #frame 0
 def program_start():
+    start_a_new_log_file_prompt()
 
+def force_sign_in():
         # Clear the existing widgets in the frame
         for widget in frame.winfo_children():
             widget.destroy()
@@ -28,7 +30,7 @@ def program_start():
             if full_name=="":
                 prompt_label.config(text="No user signed in. Please try again\nPress CTRL + 'S' to sign in, or click on the 'Actions' dropdown", fg='red')
             else:
-                start_a_new_log_file_prompt()
+                upload_manifest()
 
 
         # Add a label to the frame with the welcome message
@@ -107,7 +109,7 @@ def yes_append_year():
     welcome_label.pack(pady=50)
 
     # Continue
-    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
+    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=force_sign_in)
     continue_button.pack(pady=50)
 
 def no_append_year():
@@ -119,7 +121,7 @@ def no_append_year():
     welcome_label.pack(pady=50)
 
     # Continue
-    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
+    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=force_sign_in)
     continue_button.pack(pady=50)
 
 def resume():
@@ -155,7 +157,7 @@ def load_existing_log_file():
     back_button = tk.Button(button_frame, text="Back", font=("Helvetica", 16), command=start_a_new_log_file_prompt)
     back_button.pack(side=tk.LEFT, padx=10)
 
-    continue_button = tk.Button(button_frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
+    continue_button = tk.Button(button_frame, text="Continue", font=("Helvetica", 16), command=force_sign_in)
     continue_button.pack(side=tk.LEFT, padx=10, pady=50)
 
 def shorten_file(filename):
