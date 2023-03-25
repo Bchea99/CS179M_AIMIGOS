@@ -167,7 +167,7 @@ def load(arr,name,weight=0):
 def unload(arr,name):
     c_name = name
     log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n")
-    return move_c(arr)
+    return move_c(arr, [c_name, 0], -1, -1, 0,coord_list=[])
 
 # Balance ship: Heavier side of ship is no more than 10%
 # weight of lighter side
