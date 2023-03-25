@@ -266,15 +266,14 @@ def getTime_to_move(time_to_move):
 def getPrev_coords(prev_coords):
     return prev_coords
 
-
 def getDict(name,first,next,time_taken,time_to_move,prev_coords):
     moveDict = {
-        "prev_coords": prev_coords,
-        "name": name,
-        "first": first,
-        "next": next,
-        "time_taken": time_taken,
-        "time_to_move": time_to_move
+        "prev_coords": prev_coords, #list
+        "name": name, #string
+        "first": first, #tuple
+        "next": next, #tuple
+        "time_taken": time_taken, #int
+        "time_to_move": time_to_move #int
     }
     return moveDict
 
