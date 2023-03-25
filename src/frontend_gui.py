@@ -4,6 +4,7 @@ import datetime
 import time
 import os
 from container_load_balance import *
+import shutil
 
 #Get current year
 #Used for creating log file
@@ -13,6 +14,7 @@ full_name = ""
 previous_instructions = []
 # Log file setup
 log_file_to_write = f'KeoghLongBeach{current_year}.txt'
+outboundFile = f'OUTBOUND_{log_file_to_write}'
 current_container = ""
 current_operation = ""
 current_manifest = ""
@@ -118,6 +120,7 @@ def no_append_year():
     welcome_label = tk.Label(frame, text=f"Created default log file 'KeoghLongBeach.txt'.",
                              font=("Helvetica", 18))
     welcome_label.pack(pady=50)
+    global log_file_to_write
     open(log_file_to_write, 'w').close()
     # Continue
     continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
@@ -220,7 +223,9 @@ def balance_or_transfer():
     balance_button.pack(side=tk.RIGHT, padx=10)
 
     def finished_cycle():
-        write_to_log_file(f"Finished a cycle. Manifest {current_manifest} was written to desktop, and reminder popup to operator"
+        global outboundFile
+        write_new_manifest(outboundFile,file_arr)
+        write_to_log_file(f"Finished a cycle. Manifest {outboundFile} was written to desktop, and reminder popup to operator"
                           f" to send file was displayed.",log_file_to_write)
         upload_manifest()
 
