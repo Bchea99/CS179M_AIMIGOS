@@ -451,13 +451,13 @@ def order_of_operations(coords):
     operations = []
     print(coords)
     # we need to implement a check to see what coords are empty
-    #if type(coords) == dict:
-        #validMoves.append(coords)
-    #else:
-
-    for coord in coords:
-        if coord['name'] != '':
-            validMoves.append(coord)
+    if type(coords) == dict:
+        validMoves.append(coords)
+    else:
+        for coord in coords:
+            if type(coord)!=int:
+                if coord['name'] != '':
+                    validMoves.append(coord)
 
 
     print(validMoves)
@@ -500,9 +500,11 @@ def animation(coordinates):
         #validMoves.append(coordinates)
     #else:# we need to implement a check to see what coords are empty
 
+
+    #filters out non dictionary values
     for coord in coordinates:
-        #if coord['name'] != '':
-        validMoves.append(coord)
+        if type(coord) == dict:
+            validMoves.append(coord)
 
 
     # list of first and second coords append dictionary values of first and next

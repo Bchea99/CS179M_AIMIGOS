@@ -154,3 +154,45 @@ March 25, 2023: 01:24 Finished a cycle. Manifest ShipCase1.txt was written to de
 March 25, 2023: 01:24 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
 March 25, 2023: 01:24 The ship has been balanced according to the legal definition of balancing.
 March 25, 2023: 01:24 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 01:28 Manifest ShipCase2.txt is opened, there are 4 containers on the ship 
+March 25, 2023: 01:29 Finished a cycle. Manifest ShipCase2.txt was written to desktop, and reminder popup to operator to send file was displayed. 
+March 25, 2023: 01:29 Manifest ShipCase1.txt is opened, there are 2 containers on the ship 
+March 25, 2023: 01:29 Finished a cycle. Manifest ShipCase1.txt was written to desktop, and reminder popup to operator to send file was displayed. 
+March 25, 2023: 01:29 "Dog" is offloaded
+March 25, 2023: 01:29 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 01:42 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:42 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:43 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:43 "Cow" is offloaded
+March 25, 2023: 01:45 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:45 "Cow" is offloaded
+March 25, 2023: 01:47 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:49 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:50 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:52 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:53 "Cow" is offloaded
+March 25, 2023: 01:54 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:55 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:58 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:59 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 02:01 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 02:01 "Cow" is offloaded
+March 25, 2023: 02:05 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 02:06 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 02:06 "Cow" is offloaded
+March 25, 2023: 02:08 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 02:08 "Cow" is offloaded
+March 25, 2023: 08:19 Manifest ShipCase1.txt is opened, there are 2 containers on the ship 
+March 25, 2023: 08:19 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 08:19 Manifest ShipCase1.txt is opened, there are 2 containers on the ship 
+March 25, 2023: 08:23 Manifest ShipCase1.txt is opened, there are 2 containers on the ship 
+March 25, 2023: 08:27 Manifest ShipCase1.txt is opened, there are 2 containers on the ship 
+March 25, 2023: 08:28 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 08:52 Manifest ShipCase2.txt is opened, there are 4 containers on the ship 
+March 25, 2023: 08:52 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 08:55 Manifest ShipCase2.txt is opened, there are 4 containers on the ship 
+March 25, 2023: 08:55 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 08:55 Manifest ShipCase2.txt is opened, there are 4 containers on the ship 
+March 25, 2023: 08:55 "Ram" is offloaded
+March 25, 2023: 08:55 "b" is onloaded
+March 25, 2023: 08:55 "Cat" is offloaded
