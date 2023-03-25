@@ -257,7 +257,8 @@ def ship_balance(arr):
         grid_frame.rowconfigure(i, weight=1)
 
     global balanceData #balanceData originall declared dict
-    balanceData = balance_ship(arr)
+    arr_copy = arr.copy()
+    balanceData = balance_ship(arr_copy)
     #returns balanceData = (leftDictionary, rightDictionary, total_time_taken)
     #here balanceData is not a dictionary
     order_of_operations(balanceData)
@@ -299,56 +300,58 @@ def load_operation():
     entry_width = label_width  # Subtract a bit to account for padding and borders
 
     # Create the First Name entry box
-    first_name_label = tk.Label(frame, text="Container Weight:")
-    first_name_label.pack()
-    first_name_entry = tk.Entry(frame, width=entry_width)
-    first_name_entry.pack()
+    container_weight_label = tk.Label(frame, text="Container Weight:")
+    container_weight_label.pack()
+    container_weight_entry = tk.Entry(frame, width=entry_width)
+    container_weight_entry.pack()
 
     # Create the Last Name entry box
-    last_name_label = tk.Label(frame, text="Container Name:")
-    last_name_label.pack()
-    last_name_entry = tk.Entry(frame, width=entry_width)
-    last_name_entry.pack()
+    container_name_label = tk.Label(frame, text="Container Name:")
+    container_name_label.pack()
+    container_name_entry = tk.Entry(frame, width=entry_width)
+    container_name_entry.pack()
 
     def load_instruction():
+        global file_arr
+
+        new_array, best_cell = load(file_arr,container_name_entry.get(),container_weight_entry.get())
+        cell_update = [r(best_cell[0]), c(best_cell[1])]
+
+        file_arr = new_array
+
         for widget in frame.winfo_children():
             widget.destroy()
 
         # Create a label with the instructions
         label_text = "Please load the container to the indicated spot"
         label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
-        label.grid(row=0, column=0, columnspan=12)
+        label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
 
         # create a new frame for the grid
         grid_frame = tk.Frame(frame)
-        grid_frame.grid(row=1, column=0, sticky="nsew")
+        grid_frame.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
 
         # create the grid
         for row in range(8):
             for col in range(12):
-                if(row == 0 and col == 0): #This will be changed to if
-                    cell = tk.Label(grid_frame, font=("Helvetica", 16), borderwidth=1, relief="solid", bg='red')
-                    cell.grid(row=row, column=col, sticky="nsew")
-                else:
-                    cell = tk.Label(grid_frame, text="Test", font=("Helvetica", 16), borderwidth=1, relief="solid")
-                    cell.grid(row=row, column=col, sticky="nsew")
+                container_name = file_arr[row][col][0]
+                cell = tk.Label(grid_frame, text=container_name, font=("Helvetica", 16), borderwidth=1, relief="solid")
+                cell.grid(row=row, column=col, sticky="nsew")
 
         # configure the grid to expand and fill the remaining space
         grid_frame.columnconfigure(0, weight=1)
         for i in range(12):
             grid_frame.columnconfigure(i, weight=1)
         for i in range(9):
-            grid_frame.rowconfigure(i, weight=1)
-
-            # create the continue button
+            grid_frame.rowconfigure(i, weight=1)           # create the continue button
         continue_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
                                     command=balance_or_transfer)
-        continue_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
+        continue_button.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
 
         # function to alternate the background color of the red cell
         def alternate_color():
             # we need a way to bring a value in
-            cell = grid_frame.grid_slaves(row=0,column=0)[0] #Backend needs a way to find the position
+            cell = grid_frame.grid_slaves(row=cell_update[0],column=cell_update[1])[0] #Backend needs a way to find the position
             current_color = cell.cget("bg")
             new_color = "white" if current_color == "red" else "red"
             cell.config(bg=new_color)
@@ -422,14 +425,13 @@ def select_container(name):
     #Inserting functionality for unloading here assuming that we only select containers when unloading
 
     #actual dictionary value received from here
-    moveDict = load_unload_ship(file_arr, "u", name[0])
-    print(moveDict)
+    global coord_list
+    moveDict, coord_list = unload(file_arr, name[0])
+    coord_list.insert(0, moveDict)
 
-    global current_container
-    current_container = name
-
+    print(coord_list)
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
-                             command=lambda: order_of_operations(moveDict))
+                             command=lambda: order_of_operations(coord_list))
     generate_order.pack()
 
 def order_of_operations(coords):
@@ -441,6 +443,9 @@ def order_of_operations(coords):
         # a tuple composed of the left and right dict vals (balancing)
         # an actual dict val for the movement on a single page (unloading)
 
+    global orderOps
+
+
     validMoves = []
     operation = ""
     operations = []
@@ -449,11 +454,15 @@ def order_of_operations(coords):
     if type(coords) == dict:
         validMoves.append(coords)
     else:
-        for coord in coords[:-1]:
-            if coord['name'] != '':
-                validMoves.append(coord)
+        for coord in coords:
+            if type(coord)!=int:
+                if coord['name'] != '':
+                    validMoves.append(coord)
 
 
+    print(validMoves)
+    #we reverse here to get the order of removing from the top to the desired container
+    validMoves = reversed(validMoves)
     for i in validMoves:
         ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"
         operations.append(ops)
@@ -468,16 +477,9 @@ def order_of_operations(coords):
         label = tk.Label(frame, text=operation, font=("Helvetica", 18))
         label.pack()
 
-    coordinates = [[2, 1], [2, 3], [3, 4], [3,3], [5,2], [6,1]]
 
-    #gotta find a way to get coordinates in here
-    #coords = cycleCoords(coords)
-
-    #Here we store the coordinates as tuples
-    #dict(coordinates) = coords
-    #oordinates.append()
-    # here we take in back end coordinates
-    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(coords))
+    # here we take in back end coordinates                                                                          #reverse the coordinates here for same reason as above
+    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(reversed(coords)))
 #                             command=lambda: animation(coordinates))
 
     previous_instructions = []
@@ -489,23 +491,20 @@ def animation(coordinates):
     for widget in frame.winfo_children():
         widget.destroy()
 
-#
-
-# pops a list - might need a revision
-    # first_coords = coordinates.pop(0)
-    # second_coords = coordinates[0]
-
     # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
     global valid_moves
     validMoves = []
 
     print(coordinates)
-    if type(coordinates) == dict:
-        validMoves.append(coordinates)
-    else:# we need to implement a check to see what coords are empty
-        for coord in coordinates[:-1]:
-            if coord['name'] != '':
-                validMoves.append(coord)
+    #if type(coordinates) == dict:
+        #validMoves.append(coordinates)
+    #else:# we need to implement a check to see what coords are empty
+
+
+    #filters out non dictionary values
+    for coord in coordinates:
+        if type(coord) == dict:
+            validMoves.append(coord)
 
 
     # list of first and second coords append dictionary values of first and next
@@ -519,11 +518,9 @@ def animation(coordinates):
 
 
 
-    first = first_coords.pop(len(validMoves)-1)
-    second = second_coords.pop(len(validMoves)-1)
+    first = first_coords.pop(0)
+    second = second_coords.pop(0)
 
-
-    #we should wrap this label in an if loop to check if unload or balance
     # Create a label with the instructions
     label_text = "Move" + str(first) + "to" + str(second)
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
@@ -542,6 +539,10 @@ def animation(coordinates):
                 cell = tk.Label(grid_frame, text=container_name, font=("Helvetica", 16), borderwidth=1, relief="solid")
                 cell.grid(row=row, column=col, sticky="nsew")
 
+    #Container to move
+    first_container_info = file_arr[8 - first[0]][first[1]-1]
+    file_arr[8 - first[0]][first[1] - 1] = file_arr[8 - second[0]][second[1]-1]
+    file_arr[8 - second[0]][second[1] - 1] = first_container_info
 
     previous_instructions.append([first_coords])
 
@@ -585,7 +586,7 @@ def animation(coordinates):
     if len(validMoves) != 1:
        # create the continue button
        continue_button = tk.Button(frame, text="Next", font=("Helvetica", 16),
-                                   command= lambda: animation(coordinates))
+                                   command= lambda: animation(coord))
        continue_button.place(relx=0.44, rely=0.8, anchor=tk.CENTER)
     else:
        # create the continue button
@@ -692,7 +693,9 @@ if __name__ == "__main__":
         'time_taken': 0,
         'time_to_move': 0
     }
+    orderOps = []
     validMoves = []
+    coord_list = []
 
     root = tk.Tk()
     root.geometry(
