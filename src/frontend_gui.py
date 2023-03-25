@@ -105,7 +105,11 @@ def yes_append_year():
     for widget in frame.winfo_children():
         widget.destroy()
 
+
     global log_file_to_write
+
+    os.remove(log_file_to_write)
+
     log_file_to_write = f'KeoghLongBeach{current_year}.txt'
     open(log_file_to_write, 'w').close()
     welcome_label = tk.Label(frame, text=f"Created default log file '{log_file_to_write}'.", font=("Helvetica", 18))
@@ -342,9 +346,9 @@ def load_operation():
         fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
         fileLabel.pack()
 
-        container_name = container_name_entry.get()
+        load_container_name = container_name_entry.get()
 
-        new_array, best_cell = load(file_arr,container_name,container_weight_entry.get())
+        new_array, best_cell = load(file_arr,load_container_name,container_weight_entry.get())
         cell_update = [r(best_cell[0]), c(best_cell[1])]
 
         file_arr = new_array
@@ -376,7 +380,7 @@ def load_operation():
             grid_frame.rowconfigure(i, weight=1)           # create the continue button
 
         def finish_onload():
-            write_to_log_file(f"{container_name} is onloaded",log_file_to_write)
+            write_to_log_file(f"{load_container_name} is onloaded",log_file_to_write)
             balance_or_transfer()
 
         continue_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
@@ -664,11 +668,11 @@ def input_name():
         global full_name
         full_name = full_name_entry.get()
         print("Name:", full_name)
-        if log_file_to_write != "":
+        if log_file_to_write != "" :
             write_to_log_file(f"{full_name} signs in", log_file_to_write)
         username_prompt.destroy() # Close the prompt window after submission
 
-    if log_file_to_write != "" :
+    if log_file_to_write != "" and full_name != "":
         write_to_log_file(f"{full_name} signs out", log_file_to_write)
 
     username_prompt = tk.Tk()
