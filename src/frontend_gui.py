@@ -14,7 +14,7 @@ full_name = ""
 previous_instructions = []
 # Log file setup
 log_file_to_write = f'KeoghLongBeach{current_year}.txt'
-outboundFile = f'OUTBOUND_{log_file_to_write}'
+outboundFile = log_file_to_write.split(".")[0] + "OUTBOUND.txt"
 current_container = ""
 current_operation = ""
 current_manifest = ""
