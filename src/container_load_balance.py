@@ -11,7 +11,21 @@ log_file_to_write = "KeoghLongBeach" + str(datetime.datetime.now().year) + ".txt
 log_file = open(log_file_to_write, "a") # log file variable in use in all functions
 user_name = "123" # user who signs in, "123" signifies no previous user signed in (first run)
 
+
 #FUNCTION: all functions below
+def write_to_log_file(message, file_name):
+    log_file = open(file_name, "a")
+    log_file.write(f"{get_date_time()} {message} \n")
+    print("Log file written")
+
+def count_containers(container_array):
+    count = 0
+    for rows in container_array:
+        for container in rows:
+            container_name = container[0]
+            if container_name != "NAN" and container_name != "UNUSED":
+                count += 1
+    return count
 
 #Any function with ## above it denotes that it isn't immediately required for integration
 ##
@@ -160,7 +174,7 @@ def load(arr,name,weight=0):
     print(f"The estimated time of this load operation is {least_time + 2} minutes")  # time estimation, +2 from truck -> ship
     print(f"Move {c_name} container with weight {c_weight} from the truck to [{best_loc[0]}, {best_loc[1]}] on the ship.")  # instruction
     log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n")  # log file onloading
-    return cell_to_insert
+    return arr, best_loc
 
 def unload(arr,name):
     c_name = name
