@@ -185,6 +185,7 @@ def upload_manifest():
             selected_file.config(text=f"Selected file: {file_path}")  # file input
             continue_button.pack(pady=50)
             # here is where interactions with backend start
+            global file_name
             file_name = shorten_file(file_path)  # file_path truncated into txt file
             print(file_name)
             root.title("Mainfest: " + file_name)
@@ -204,7 +205,8 @@ def upload_manifest():
 def balance_or_transfer():
     for widget in frame.winfo_children():
         widget.destroy()
-
+    fileLabel = tk.Label(frame, text= file_name, font=("Helvetica", 14))
+    fileLabel.pack()
     label = tk.Label(frame, text="Please select an operation",
                      font=("Helvetica", 18))
     label.pack(pady=50)
@@ -232,6 +234,9 @@ def balance_or_transfer():
 def ship_balance(arr):
     for widget in frame.winfo_children():
         widget.destroy()
+
+    fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
+    fileLabel.grid(row=0, column = 0, columnspan = 12)
 
     # Create a label with the instructions
     label_text = "Commence Balancing"
@@ -270,6 +275,9 @@ def container_transfer():
     for widget in frame.winfo_children():
         widget.destroy()
 
+    fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
+    fileLabel.pack()
+
     label = tk.Label(frame, text="Which type of transfer would you like to do?",
                      font=("Helvetica", 18))
     label.pack(pady=50)
@@ -286,6 +294,9 @@ def container_transfer():
 def load_operation():
     for widget in frame.winfo_children():
         widget.destroy()
+
+    fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
+    fileLabel.pack()
 
     global current_operation
     current_operation = "onloaded"
@@ -313,6 +324,9 @@ def load_operation():
 
     def load_instruction():
         global file_arr
+
+        fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
+        fileLabel.pack()
 
         new_array, best_cell = load(file_arr,container_name_entry.get(),container_weight_entry.get())
         cell_update = [r(best_cell[0]), c(best_cell[1])]
@@ -375,6 +389,9 @@ def unload_operation(arr):
     for widget in frame.winfo_children():
         widget.destroy()
 
+    fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
+    fileLabel.grid(row=0, column = 0, columnspan = 12)
+
     global current_operation
     current_operation = "offloaded"
 
@@ -414,6 +431,9 @@ def select_container(name):
     for widget in frame.winfo_children():
         widget.destroy()
 
+    fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
+    fileLabel.pack()
+
     message = f"The container named {name} has been selected."
     label = tk.Label(frame, text=message, font=("Helvetica", 18))
     label.pack(pady=50)
@@ -439,13 +459,14 @@ def order_of_operations(coords):
         widget.destroy()
         # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
 
+    fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
+    fileLabel.pack()
+
     #Here we can receive two potential values as the argument:
         # a tuple composed of the left and right dict vals (balancing)
         # an actual dict val for the movement on a single page (unloading)
 
     global orderOps
-
-
     validMoves = []
     operation = ""
     operations = []
@@ -490,6 +511,9 @@ def order_of_operations(coords):
 def animation(coordinates):
     for widget in frame.winfo_children():
         widget.destroy()
+
+    fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
+    fileLabel.pack()
 
     # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
     global valid_moves
