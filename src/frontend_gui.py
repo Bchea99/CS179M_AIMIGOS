@@ -257,10 +257,13 @@ def ship_balance(arr):
         grid_frame.rowconfigure(i, weight=1)
 
     global balanceData #balanceData originall declared dict
+    global coord_list
     arr_copy = arr.copy()
-    balanceData = balance_ship(arr_copy)
+    balanceData, coord_list = balance_ship(arr_copy)
+
     #returns balanceData = (leftDictionary, rightDictionary, total_time_taken)
     #here balanceData is not a dictionary
+    print(coord_list)
     order_of_operations(balanceData)
 
 
@@ -426,7 +429,7 @@ def select_container(name):
 
     #actual dictionary value received from here
     global coord_list
-    moveDict, coord_list = unload(file_arr, name[0])
+    moveDict, coord_list = unload(file_arr.copy(), name[0])
     coord_list.insert(0, moveDict)
 
     print(coord_list)
@@ -480,7 +483,6 @@ def order_of_operations(coords):
 
     # here we take in back end coordinates                                                                          #reverse the coordinates here for same reason as above
     generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(reversed(coords)))
-#                             command=lambda: animation(coordinates))
 
     previous_instructions = []
                              
@@ -501,8 +503,8 @@ def animation(coordinates):
     #else:# we need to implement a check to see what coords are empty
 
     for coord in coordinates:
-        #if coord['name'] != '':
-        validMoves.append(coord)
+        if coord['name'] != '':
+            validMoves.append(coord)
 
 
     # list of first and second coords append dictionary values of first and next
@@ -514,13 +516,14 @@ def animation(coordinates):
         second_coords.append(i['next'])
     print(validMoves)
 
-
-
     first = first_coords.pop(0)
     second = second_coords.pop(0)
 
     # Create a label with the instructions
-    label_text = "Move" + str(first) + "to" + str(second)
+    if(second[0] == 8):
+        label_text = "Move" + str(first) + " to the truck"
+    else:
+        label_text = "Move" + str(first) + "to" + str(second)
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
     label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
 

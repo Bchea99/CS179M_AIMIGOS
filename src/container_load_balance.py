@@ -68,6 +68,7 @@ def manifest_init(file_name):
         lines = f.readlines()
 
     # [8x12] grid, bottom left [1,1], top right [8,12] ;; arr[i][j] = [Name, Weight]
+
     arr = np.empty([8,12], dtype='object') # Ship grid with Containers and weights
     # populate ship_arr with Container [Name, weight]
     # vals is list: [row, column, weight, name]
@@ -262,19 +263,22 @@ def balance_ship(arr):
         'time_to_move': 0
     }
 
+    coord_list_R = []
+    coord_list_L = []
 
     for cell in to_move_right:
         #total_time_taken += move_c(arr, cell, 7, 1, 0)
-        move_dict_R, coord_list = move_c(arr, cell, 7, 1, 0, coord_list=[])
+        move_dict_R, coord_list_R = move_c(arr, cell, 7, 1, 0, coord_list=[])
     for cell in to_move_left:
         #total_time_taken += move_c(arr, cell, 6, -1,0)
-        move_dict_L, coord_list = move_c(arr, cell, 6, -1, 0, coord_list=[])
+        move_dict_L, coord_list_L = move_c(arr, cell, 6, -1, 0, coord_list=[])
 
     #index 0 is left operations, index 1 is right, index 3 is total time
 
 
     total_time_taken = move_dict_L['time_to_move'] + move_dict_R['time_to_move']
-    balanceData = (move_dict_L, move_dict_R, total_time_taken)
+    balanceData = (move_dict_L, move_dict_R)
+    coord_list = coord_list_R + coord_list_L
 
     print("\nContainers to move to the left [port]:",to_move_left)
     print("Containers to move to the right [starboard]:",to_move_right)
@@ -283,7 +287,7 @@ def balance_ship(arr):
     log_file.write(f"{get_date_time()} The ship has been balanced according to the legal definition of balancing.\n") # log file balancing success
 
     print(balanceData)
-    return balanceData
+    return balanceData, coord_list
 # Helper to balance_ship function
 # Returns false if the two sides of ship are balanced;; true otherwise.
 def check_unbalance(l_w, r_w): 
