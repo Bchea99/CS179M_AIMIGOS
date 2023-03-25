@@ -12,7 +12,7 @@ current_year = today.year
 full_name = ""
 previous_instructions = []
 # Log file setup
-log_file_to_write = ""
+log_file_to_write = f'KeoghLongBeach{current_year}.txt'
 current_container = ""
 current_operation = ""
 current_manifest = ""
