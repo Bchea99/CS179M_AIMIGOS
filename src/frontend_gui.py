@@ -10,6 +10,7 @@ from container_load_balance import *
 today = datetime.date.today()
 current_year = today.year
 full_name = ""
+previous_instructions = []
 
 
 #frame 0
@@ -79,11 +80,14 @@ def create_new_log_file():
     button_frame = tk.Frame(frame)
     button_frame.pack()
 
+    back_button = tk.Button(button_frame, text="Back", font=("Helvetica", 16), command=start_a_new_log_file_prompt)
+    back_button.pack(side=tk.LEFT, padx=10)
+
     no_button = tk.Button(button_frame, text="No", font=("Helvetica", 16), command=no_append_year)
-    no_button.pack(side=tk.RIGHT, padx=10)
+    no_button.pack(side=tk.LEFT, padx=10)
 
     yes_button = tk.Button(button_frame, text="Yes", font=("Helvetica", 16), command=yes_append_year)
-    yes_button.pack(side=tk.LEFT, padx=10)
+    yes_button.pack(side=tk.RIGHT, padx=10)
 
 def yes_append_year():
     for widget in frame.winfo_children():
@@ -131,8 +135,15 @@ def load_existing_log_file():
                              font=("Helvetica", 18))
     welcome_label.pack(pady=50)
 
-    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manfiest)
-    continue_button.pack(pady=50)
+    # Put the buttons in a new frame
+    button_frame = tk.Frame(frame)
+    button_frame.pack()
+
+    back_button = tk.Button(button_frame, text="Back", font=("Helvetica", 16), command=start_a_new_log_file_prompt)
+    back_button.pack(side=tk.LEFT, padx=10)
+
+    continue_button = tk.Button(button_frame, text="Continue", font=("Helvetica", 16), command=upload_manfiest)
+    continue_button.pack(side=tk.LEFT, padx=10, pady=50)
 
 def shorten_file(filename):
     file = os.path.split(filename)[1]
@@ -156,18 +167,17 @@ def upload_manfiest():
     #filedialog.askopenfilename() allows the user to select multiple files
     # this means infinite continue buttons can be selected
     def browse_file():
-        file_path = filedialog.askopenfilename() #file path established
+        file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])  # file path established
         if file_path:
-            selected_file.config(text=f"Selected file: {file_path}")#file input
-            continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=balance_or_transfer)
+            selected_file.config(text=f"Selected file: {file_path}")  # file input
             continue_button.pack(pady=50)
-        #here is where interactions with backend start
-        file_name = shorten_file(file_path)#file_path truncated into txt file
-        print(file_name)
-        global file_arr
-        file_arr = manifest_init(file_path)#txt file passed into manifest_init to be transformed into arr
+            # here is where interactions with backend start
+            file_name = shorten_file(file_path)  # file_path truncated into txt file
+            print(file_name)
+            root.title("Mainfest: " + file_name)
+            file_arr = manifest_init(file_path)  # txt file passed into manifest_init to be transformed into arr
 
-
+    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=balance_or_transfer)
     button = tk.Button(frame, text="Select File", command=browse_file)
     button.pack(pady=50)
 
@@ -187,8 +197,12 @@ def balance_or_transfer():
                                #command=ship_balance)
     balance_button.pack(side=tk.RIGHT, padx=10)
 
+    manifest_button = tk.Button(button_frame, text="Upload another manifest file", font=("Helvetica", 16), command=upload_manfiest)
+    manifest_button.pack(side=tk.LEFT, padx=10)
+
     transfer_button = tk.Button(button_frame, text="Start a transfer", font=("Helvetica", 16), command=container_transfer)
     transfer_button.pack(side=tk.LEFT, padx=10)
+
 
 #Passing in an array for the ship balancing functionality
 def ship_balance(arr):
@@ -316,10 +330,16 @@ def load_operation():
         # start alternating the background color of the red cell
         alternate_color()
 
+    button_frame = tk.Frame(frame)
+    button_frame.pack()
+
+    back_button = tk.Button(button_frame, text="Back", font=("Helvetica", 16), command=balance_or_transfer)
+    back_button.pack(side=tk.LEFT, padx=10)
+
     # Create the Submit button
-    submit_button = tk.Button(frame, text="Submit", font=("Helvetica", 16),
+    submit_button = tk.Button(button_frame, text="Submit", font=("Helvetica", 16),
                               command=load_instruction)
-    submit_button.pack(pady=50)
+    submit_button.pack(side=tk.RIGHT,pady=50)
 
 def unload_operation(arr):
     for widget in frame.winfo_children():
@@ -415,6 +435,8 @@ def order_of_operations(coords):
         label = tk.Label(frame, text=operation, font=("Helvetica", 18))
         label.pack()
 
+    coordinates = [[2, 1], [2, 3], [3, 4], [3,3], [5,2], [6,1]]
+
     #gotta find a way to get coordinates in here
     #coords = cycleCoords(coords)
 
@@ -422,8 +444,11 @@ def order_of_operations(coords):
     #dict(coordinates) = coords
     #oordinates.append()
     # here we take in back end coordinates
-    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),
-                             command=lambda: animation(coords))
+    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(coords))
+#                             command=lambda: animation(coordinates))
+
+    previous_instructions = []
+                             
     generate_animation.pack()
 
 
@@ -431,7 +456,17 @@ def animation(coordinates):
     for widget in frame.winfo_children():
         widget.destroy()
 
-    # pops a list - might need a revision
+#    first_coords = coordinates.pop(0)
+#    second_coords = coordinates[0]
+#
+#    label = tk.Label(frame, text=f"Move ({first_coords[0]},{first_coords[1]}) to ({second_coords[0]},{second_coords[1]})", font=("Helvetica", 18))
+#    label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
+
+    # create a new frame for the grid
+#    grid_frame = tk.Frame(frame)
+#    grid_frame.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
+
+# pops a list - might need a revision
     # first_coords = coordinates.pop(0)
     # second_coords = coordinates[0]
 
@@ -482,25 +517,52 @@ def animation(coordinates):
                 cell = tk.Label(grid_frame, text=container_name, font=("Helvetica", 16), borderwidth=1, relief="solid")
                 cell.grid(row=row, column=col, sticky="nsew")
 
-    # configure the grid to expand and fill the remaining space
-    grid_frame.columnconfigure(0, weight=1)
-    for i in range(12):
-        grid_frame.columnconfigure(i, weight=1)
-    for i in range(9):
-        grid_frame.rowconfigure(i, weight=1)
 
+    previous_instructions.append([first_coords])
 
+    def go_back():
+        first_coord = previous_instructions.pop()
+        second_coord = previous_instructions.pop()
+        animation(second_coord + first_coord + coordinates)
 
-    if len(validMoves) != 1:
+    def next():
+        animation(coordinates)
+
+    if len(coordinates) != 1:
+        root.bind("<space>", lambda event: animation(coordinates))
         # create the continue button
-        continue_button = tk.Button(frame, text="Next", font=("Helvetica", 16),
-                                    command= lambda: animation(coordinates))
-        continue_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
+        if(previous_instructions):
+            back_button = tk.Button(frame, text="Back", font=("Helvetica", 16),
+                                        command= go_back)
+            back_button.place(relx=0.44,rely=0.8, anchor=tk.CENTER)
+        # create the continue button
+        continue_button = tk.Button(frame, text="Next (Spacebar)", font=("Helvetica", 16),
+                                    command= next)
+        continue_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
     else:
+        root.unbind("<space>")
+        root.bind("<space>", lambda event: balance_or_transfer())
+        if(previous_instructions):
+            back_button = tk.Button(frame, text="Back", font=("Helvetica", 16),
+                                    command= go_back)
+            back_button.place(relx=0.44, rely=0.8, anchor=tk.CENTER)
+
         # create the continue button
-        finish_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
+        finish_button = tk.Button(frame, text="Done (Spacebar)", font=("Helvetica", 16),
                                     command=balance_or_transfer)
-        finish_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
+        finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
+
+
+#    if len(validMoves) != 1:
+#        # create the continue button
+#        continue_button = tk.Button(frame, text="Next", font=("Helvetica", 16),
+#                                    command= lambda: animation(coordinates))
+#        continue_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
+#    else:
+#        # create the continue button
+#        finish_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
+#                                    command=balance_or_transfer)
+#        finish_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
 
     # function to alternate the background color of the red cell
     def alternate_color():
