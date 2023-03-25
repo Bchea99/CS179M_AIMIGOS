@@ -3,6 +3,7 @@ from tkinter import filedialog
 import datetime
 import time
 import os
+from os.path import expanduser
 from container_load_balance import *
 import shutil
 
@@ -80,13 +81,15 @@ def create_new_log_file():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    global log_file_to_write
+    global log_file_to_write, log_file_path
     log_file_to_write = 'KeoghLongBeach.txt'
 
     welcome_label = tk.Label(frame, text=f"Creating default log file named '{log_file_to_write}'."
                                          "\nWould you like to append the current year?"
                                          f"\nCurrent Year: {current_year} ", font=("Helvetica", 18))
-    open(log_file_to_write, 'w').close()
+    #creating a log folder on desktop
+
+
     welcome_label.pack(pady=50)
 
     button_frame = tk.Frame(frame)
@@ -107,11 +110,20 @@ def yes_append_year():
 
 
     global log_file_to_write
-
-    os.remove(log_file_to_write)
+    #os.remove(log_file_to_write)
 
     log_file_to_write = f'KeoghLongBeach{current_year}.txt'
+
+    #make folder on desktop
+    desktop = expanduser("~")
+    log_file_path = os.path.join(desktop, "Desktop", "output")
+    log_file_path = os.path.join(log_file_path, "log_folder")
+    if not os.path.exists(log_file_path):  # checks log path exists
+        os.makedirs(log_file_path)
+    log_file_to_write = os.path.join(log_file_path, log_file_to_write)
     open(log_file_to_write, 'w').close()
+
+
     welcome_label = tk.Label(frame, text=f"Created default log file '{log_file_to_write}'.", font=("Helvetica", 18))
     welcome_label.pack(pady=50)
 
@@ -127,7 +139,17 @@ def no_append_year():
                              font=("Helvetica", 18))
     welcome_label.pack(pady=50)
     global log_file_to_write
+
+    # make folder on desktop
+    desktop = expanduser("~")
+    log_file_path = os.path.join(desktop, "Desktop", "output")
+    log_file_path = os.path.join(log_file_path, "log_folder")
+    if not os.path.exists(log_file_path):  # checks log path exists
+        os.makedirs(log_file_path)
+    log_file_to_write = os.path.join(log_file_path, log_file_to_write)
     open(log_file_to_write, 'w').close()
+    #open(log_file_path, 'w')
+
     # Continue
     continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=force_sign_in)
     continue_button.pack(pady=50)
@@ -153,6 +175,15 @@ def load_existing_log_file():
 
     global log_file_to_write
     log_file_to_write = f'KeoghLongBeach{current_year}.txt'
+
+    #desktop output
+    desktop = expanduser("~")
+    log_file_path = os.path.join(desktop, "Desktop", "output")
+    log_file_path = os.path.join(log_file_path, "log_folder")
+    if not os.path.exists(log_file_path):  # checks log path exists
+        os.makedirs(log_file_path)
+    log_file_to_write = os.path.join(log_file_path, log_file_to_write)
+    open(log_file_to_write, 'w').close()
 
     welcome_label = tk.Label(frame, text=f"Using default log file {log_file_to_write}.",
                              font=("Helvetica", 18))
@@ -207,6 +238,9 @@ def upload_manifest():
             outboundFile = current_manifest.rstrip(".txt") + "OUTBOUND.txt"
             # into arr
             num_containers = count_containers(file_arr)
+
+
+
             write_to_log_file(f"Manifest {file_name} is opened, there are {num_containers} containers on the ship", log_file_to_write)
 
     continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=balance_or_transfer)
@@ -226,8 +260,17 @@ def balance_or_transfer():
     button_frame = tk.Frame(frame)
     button_frame.pack()
     def finished_cycle():
-        global outboundFile
-        write_new_manifest(outboundFile,file_arr)
+        global outboundFile, outboundFile_path
+        # make folder on desktop
+        desktop = expanduser("~")
+        outboundFile_path = os.path.join(desktop, "Desktop", "output")
+        outboundFile_path = os.path.join(outboundFile_path, "outbound_manifests")
+
+        if not os.path.exists(outboundFile_path):  # checks outbound path exists
+            os.makedirs(outboundFile_path)
+        outboundFile = os.path.join(outboundFile_path, outboundFile)
+
+        write_new_manifest(outboundFile, file_arr)
         write_to_log_file(f"Finished a cycle. Manifest {outboundFile} was written to desktop, and reminder popup to operator"
                           f" to send file was displayed.",log_file_to_write)
         upload_manifest()
@@ -749,6 +792,9 @@ if __name__ == "__main__":
     orderOps = []
     validMoves = []
     coord_list = []
+
+    log_file_path = ''
+    outboundFile_path = ''
 
     root = tk.Tk()
     root.geometry(
