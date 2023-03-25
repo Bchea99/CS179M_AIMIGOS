@@ -175,6 +175,7 @@ def upload_manfiest():
             file_name = shorten_file(file_path)  # file_path truncated into txt file
             print(file_name)
             root.title("Mainfest: " + file_name)
+            global file_arr
             file_arr = manifest_init(file_path)  # txt file passed into manifest_init to be transformed into arr
 
     continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=balance_or_transfer)
