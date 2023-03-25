@@ -97,7 +97,7 @@ def write_new_manifest(f_to_write, arr):
                 f.write("\n")
     f.close()
     # log file manifest finished 
-    log_file.write(f"{get_date_time()} Finished a Cycle. Manifest {f_to_write} was written to desktop, and a reminder pop-up to operator to send file was displayed." + "\n") 
+    #log_file.write(f"{get_date_time()} Finished a Cycle. Manifest {f_to_write} was written to desktop, and a reminder pop-up to operator to send file was displayed." + "\n")
     return
 
 # Load/Unload
@@ -174,7 +174,7 @@ def load(arr,name,weight=0):
     arr[r(best_loc[0])][c(best_loc[1])] = cell_to_insert  # optimal location to place container [time]
     print(f"The estimated time of this load operation is {least_time + 2} minutes")  # time estimation, +2 from truck -> ship
     print(f"Move {c_name} container with weight {c_weight} from the truck to [{best_loc[0]}, {best_loc[1]}] on the ship.")  # instruction
-    log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n")  # log file onloading
+    #log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n")  # log file onloading
     return arr, best_loc
 
 def unload(arr,name):
@@ -281,7 +281,7 @@ def balance_ship(arr):
     print("Containers to move to the right [starboard]:",to_move_right)
     # print("Moved Containers: \n\n",arr)
     print(f"The estimated time of this balancing operation is {total_time_taken} minutes") # time estimation balancing
-    log_file.write(f"{get_date_time()} The ship has been balanced according to the legal definition of balancing.\n") # log file balancing success
+    #log_file.write(f"{get_date_time()} The ship has been balanced according to the legal definition of balancing.\n") # log file balancing success
 
     print(balanceData)
     return balanceData
