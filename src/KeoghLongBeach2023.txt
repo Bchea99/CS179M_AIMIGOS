@@ -1,0 +1,156 @@
+March 21, 2023: 16:26 The ship has been balanced according to the legal definition of balancing.
+March 21, 2023: 16:26 The ship has been balanced according to the legal definition of balancing.
+March 21, 2023: 19:05 The ship has been balanced according to the legal definition of balancing.
+March 22, 2023: 17:49 The ship has been balanced according to the legal definition of balancing.
+March 22, 2023: 18:19 The ship has been balanced according to the legal definition of balancing.
+March 22, 2023: 18:19 The ship has been balanced according to the legal definition of balancing.
+March 22, 2023: 18:53 The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.
+March 22, 2023: 18:53 SIFT has been completed.
+March 22, 2023: 18:53 The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.
+March 22, 2023: 18:53 SIFT has been completed.
+March 22, 2023: 18:53 The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.
+March 22, 2023: 18:53 SIFT has been completed.
+March 22, 2023: 19:52 The ship has been balanced according to the legal definition of balancing.
+March 22, 2023: 22:46 The ship has been balanced according to the legal definition of balancing.
+March 22, 2023: 22:46 The ship has been balanced according to the legal definition of balancing.
+March 22, 2023: 22:46 The ship has been balanced according to the legal definition of balancing.
+March 22, 2023: 22:49 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 00:04 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 01:15 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 01:18 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 01:45 The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.
+March 23, 2023: 01:45 SIFT has been completed.
+March 23, 2023: 01:57 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 02:01 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 02:07 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 09:28 The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.
+March 23, 2023: 09:28 SIFT has been completed.
+March 23, 2023: 09:41 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 09:49 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 11:53 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 16:35 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 19:20 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 19:20 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 19:33 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 20:03 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 20:04 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 20:36 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 20:41 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 20:43 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 20:48 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 20:49 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 20:55 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 21:15 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 21:15 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 21:27 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 21:32 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 21:42 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 22:54 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 22:54 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 22:55 The ship has been balanced according to the legal definition of balancing.
+March 23, 2023: 22:57 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 09:46 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 09:47 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 14:25 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 16:00 "Cat" is offloaded
+March 24, 2023: 17:45 "Owl" is offloaded
+March 24, 2023: 17:47 "Dog" is offloaded
+March 24, 2023: 17:48 "Ram" is offloaded
+March 24, 2023: 17:48 "Cat" is offloaded
+March 24, 2023: 17:48 "NAN" is offloaded
+March 24, 2023: 17:52 "Cow" is offloaded
+March 24, 2023: 17:55 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 17:56 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 17:56 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 17:56 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 17:56 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 17:57 "Ewe" is offloaded
+March 24, 2023: 17:57 "Dog" is offloaded
+March 24, 2023: 17:57 "Rat" is offloaded
+March 24, 2023: 18:03 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 18:04 "Dog" is offloaded
+March 24, 2023: 18:05 The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.
+March 24, 2023: 18:05 SIFT has been completed.
+March 24, 2023: 18:18 "Dog" is offloaded
+March 24, 2023: 18:19 "Cow" is offloaded
+March 24, 2023: 18:20 "Cow" is offloaded
+March 24, 2023: 18:30 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 18:49 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 18:54 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 19:25 "Dog" is offloaded
+March 24, 2023: 19:26 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 21:11 "Dog" is offloaded
+March 24, 2023: 21:13 The ship has been balanced according to the legal definition of balancing.
+March 24, 2023: 21:18 "Cow" is offloaded
+March 24, 2023: 22:18 Manifest ShipCase2.txt is opened, there are 4 containers on the ship 
+March 24, 2023: 22:18 "Dog" is offloaded
+March 24, 2023: 22:19 The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.
+March 24, 2023: 22:19 SIFT has been completed.
+March 24, 2023: 23:12 Manifest ShipCase2.txt is opened, there are 4 containers on the ship 
+March 24, 2023: 23:13 Finished a cycle. Manifest ShipCase2.txt was written to desktop, and reminder popup to operator to send file was displayed. 
+March 24, 2023: 23:13 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:12 "sdf" is onloaded
+March 24, 2023: 23:12 "Dog" is offloaded
+March 24, 2023: 23:13 "Cow" is offloaded
+March 24, 2023: 23:14 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:29 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:34 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:34 "Cow" is offloaded
+March 24, 2023: 23:38 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:40 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:41 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:41 "Cow" is offloaded
+March 24, 2023: 23:45 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:45 "Cow" is offloaded
+March 24, 2023: 23:50 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:50 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 24, 2023: 23:53 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:07 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:07 "Cow" is offloaded
+March 25, 2023: 00:08 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:08 "Cow" is offloaded
+March 25, 2023: 00:09 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:09 "Cow" is offloaded
+March 25, 2023: 00:17 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:17 "Cow" is offloaded
+March 25, 2023: 00:18 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:24 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:24 "Cow" is offloaded
+March 25, 2023: 00:38 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:38 "Cow" is offloaded
+March 25, 2023: 00:39 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:39 "Cow" is offloaded
+March 25, 2023: 00:40 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:40 "Cow" is offloaded
+March 25, 2023: 00:41 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:41 "Cow" is offloaded
+March 25, 2023: 00:42 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:42 "Cow" is offloaded
+March 25, 2023: 00:43 Manifest ShipCase1.txt is opened, there are 2 containers on the ship 
+March 25, 2023: 00:43 "Cat" is offloaded
+March 25, 2023: 00:49 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:50 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:50 Finished a cycle. Manifest ShipCase3.txt was written to desktop, and reminder popup to operator to send file was displayed. 
+March 25, 2023: 00:50 Manifest ShipCase4.txt is opened, there are 7 containers on the ship 
+March 25, 2023: 00:50 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 00:50 The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.
+March 25, 2023: 00:50 SIFT has been completed.
+March 25, 2023: 00:51 Manifest ShipCase2.txt is opened, there are 4 containers on the ship 
+March 25, 2023: 00:51 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 00:57 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:57 Finished a cycle. Manifest ShipCase3.txt was written to desktop, and reminder popup to operator to send file was displayed. 
+March 25, 2023: 00:57 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:57 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 00:59 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 00:59 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 01:12 Manifest ShipCase1.txt is opened, there are 2 containers on the ship 
+March 25, 2023: 01:13 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 01:13 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:13 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 01:15 Manifest ShipCase1.txt is opened, there are 2 containers on the ship 
+March 25, 2023: 01:21 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:24 Manifest ShipCase1.txt is opened, there are 2 containers on the ship 
+March 25, 2023: 01:24 Finished a cycle. Manifest ShipCase1.txt was written to desktop, and reminder popup to operator to send file was displayed. 
+March 25, 2023: 01:24 Manifest ShipCase3.txt is opened, there are 6 containers on the ship 
+March 25, 2023: 01:24 The ship has been balanced according to the legal definition of balancing.
+March 25, 2023: 01:24 The ship has been balanced according to the legal definition of balancing.
