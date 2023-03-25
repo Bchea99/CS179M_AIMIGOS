@@ -265,10 +265,10 @@ def balance_ship(arr):
 
     for cell in to_move_right:
         #total_time_taken += move_c(arr, cell, 7, 1, 0)
-        move_dict_R = move_c(arr, cell, 7, 1, 0, coord_list=[])
+        move_dict_R, coord_list = move_c(arr, cell, 7, 1, 0, coord_list=[])
     for cell in to_move_left:
         #total_time_taken += move_c(arr, cell, 6, -1,0)
-        move_dict_L = move_c(arr, cell, 6, -1, 0, coord_list=[])
+        move_dict_L, coord_list = move_c(arr, cell, 6, -1, 0, coord_list=[])
 
     #index 0 is left operations, index 1 is right, index 3 is total time
 

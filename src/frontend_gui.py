@@ -520,8 +520,6 @@ def animation(coordinates):
     first = first_coords.pop(0)
     second = second_coords.pop(0)
 
-
-    #we should wrap this label in an if loop to check if unload or balance
     # Create a label with the instructions
     label_text = "Move" + str(first) + "to" + str(second)
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
