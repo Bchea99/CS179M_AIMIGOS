@@ -427,8 +427,6 @@ def select_container(name):
     moveDict = unload(file_arr, name[0])
     print(moveDict)
 
-    global current_container
-    current_container = name
 
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
                              command=lambda: order_of_operations(moveDict))
@@ -442,6 +440,9 @@ def order_of_operations(coords):
     #Here we can receive two potential values as the argument:
         # a tuple composed of the left and right dict vals (balancing)
         # an actual dict val for the movement on a single page (unloading)
+
+    global orderOps
+
 
     validMoves = []
     operation = ""
@@ -694,6 +695,7 @@ if __name__ == "__main__":
         'time_taken': 0,
         'time_to_move': 0
     }
+    orderOps = []
     validMoves = []
 
     root = tk.Tk()
