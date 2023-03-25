@@ -247,6 +247,9 @@ def ship_balance(arr):
     grid_frame = tk.Frame(frame)
     grid_frame.grid(row=1, column=0, sticky="nsew")
 
+    global current_operation
+    current_operation = "balance"
+
     # create the grid
     for row in range(8):
         for col in range(12):
@@ -328,7 +331,9 @@ def load_operation():
         fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
         fileLabel.pack()
 
-        new_array, best_cell = load(file_arr,container_name_entry.get(),container_weight_entry.get())
+        container_name = container_name_entry.get()
+
+        new_array, best_cell = load(file_arr,container_name,container_weight_entry.get())
         cell_update = [r(best_cell[0]), c(best_cell[1])]
 
         file_arr = new_array
@@ -358,8 +363,13 @@ def load_operation():
             grid_frame.columnconfigure(i, weight=1)
         for i in range(9):
             grid_frame.rowconfigure(i, weight=1)           # create the continue button
+
+        def finish_onload():
+            write_to_log_file(f"{container_name} is onloaded",log_file_to_write)
+            balance_or_transfer()
+
         continue_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
-                                    command=balance_or_transfer)
+                                    command=finish_onload)
         continue_button.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
 
         # function to alternate the background color of the red cell
@@ -586,7 +596,10 @@ def animation(coordinates):
         animation(coordinates)
 
     def finish():
-        write_to_log_file(f"{current_container} is {current_operation}", log_file_to_write)
+        if current_operation == "balance":
+            write_to_log_file("The ship has been balanced according to the legal definition of balancing.", log_file_to_write)
+        else:
+            write_to_log_file(f"{current_container} is {current_operation}", log_file_to_write)
         balance_or_transfer()
 
     # if len(coordinates) != 1:
@@ -622,7 +635,7 @@ def animation(coordinates):
     else:
        # create the continue button
        finish_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
-                                   command=balance_or_transfer)
+                                   command=finish)
        finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
 
     # function to alternate the background color of the red cell
@@ -690,6 +703,7 @@ def input_name():
 def add_comment():
     def submit_comment():
         comment = comment_entry.get("1.0",tk.END)
+        comment = comment.rstrip('\n')
         write_to_log_file(comment,log_file_to_write)
         comment_prompt.destroy() # Close the prompt window after submission
 
