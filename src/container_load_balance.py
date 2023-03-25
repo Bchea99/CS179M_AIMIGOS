@@ -77,6 +77,7 @@ def manifest_init(file_name):
         arr[r(vals[0])][c(vals[1])] = [vals[3], vals[2]]
         if vals[2] > 0:
             container_cnt += 1
+    #pen(log_file_to_write, 'w').close()
     #log_file.write(f"{get_date_time()} Manifest {file_name} is opened, there are {container_cnt} containers on the ship\n") # log file open manifest message
     #print(arr)
     

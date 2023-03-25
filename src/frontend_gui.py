@@ -4,6 +4,7 @@ import datetime
 import time
 import os
 from container_load_balance import *
+import shutil
 
 #Get current year
 #Used for creating log file
@@ -12,14 +13,17 @@ current_year = today.year
 full_name = ""
 previous_instructions = []
 # Log file setup
-log_file_to_write = ""
+log_file_to_write = f'KeoghLongBeach{current_year}.txt'
+outboundFile = f'OUTBOUND_{log_file_to_write}'
 current_container = ""
 current_operation = ""
 current_manifest = ""
 
 #frame 0
 def program_start():
+    start_a_new_log_file_prompt()
 
+def force_sign_in():
         # Clear the existing widgets in the frame
         for widget in frame.winfo_children():
             widget.destroy()
@@ -28,7 +32,7 @@ def program_start():
             if full_name=="":
                 prompt_label.config(text="No user signed in. Please try again\nPress CTRL + 'S' to sign in, or click on the 'Actions' dropdown", fg='red')
             else:
-                start_a_new_log_file_prompt()
+                upload_manifest()
 
 
         # Add a label to the frame with the welcome message
@@ -82,6 +86,7 @@ def create_new_log_file():
     welcome_label = tk.Label(frame, text=f"Creating default log file named '{log_file_to_write}'."
                                          "\nWould you like to append the current year?"
                                          f"\nCurrent Year: {current_year} ", font=("Helvetica", 18))
+    open(log_file_to_write, 'w').close()
     welcome_label.pack(pady=50)
 
     button_frame = tk.Frame(frame)
@@ -102,12 +107,12 @@ def yes_append_year():
 
     global log_file_to_write
     log_file_to_write = f'KeoghLongBeach{current_year}.txt'
-
+    open(log_file_to_write, 'w').close()
     welcome_label = tk.Label(frame, text=f"Created default log file '{log_file_to_write}'.", font=("Helvetica", 18))
     welcome_label.pack(pady=50)
 
     # Continue
-    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
+    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=force_sign_in)
     continue_button.pack(pady=50)
 
 def no_append_year():
@@ -117,9 +122,10 @@ def no_append_year():
     welcome_label = tk.Label(frame, text=f"Created default log file 'KeoghLongBeach.txt'.",
                              font=("Helvetica", 18))
     welcome_label.pack(pady=50)
-
+    global log_file_to_write
+    open(log_file_to_write, 'w').close()
     # Continue
-    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
+    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=force_sign_in)
     continue_button.pack(pady=50)
 
 def resume():
@@ -155,7 +161,7 @@ def load_existing_log_file():
     back_button = tk.Button(button_frame, text="Back", font=("Helvetica", 16), command=start_a_new_log_file_prompt)
     back_button.pack(side=tk.LEFT, padx=10)
 
-    continue_button = tk.Button(button_frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
+    continue_button = tk.Button(button_frame, text="Continue", font=("Helvetica", 16), command=force_sign_in)
     continue_button.pack(side=tk.LEFT, padx=10, pady=50)
 
 def shorten_file(filename):
@@ -219,7 +225,9 @@ def balance_or_transfer():
     balance_button.pack(side=tk.RIGHT, padx=10)
 
     def finished_cycle():
-        write_to_log_file(f"Finished a cycle. Manifest {current_manifest} was written to desktop, and reminder popup to operator"
+        global outboundFile
+        write_new_manifest(outboundFile,file_arr)
+        write_to_log_file(f"Finished a cycle. Manifest {outboundFile} was written to desktop, and reminder popup to operator"
                           f" to send file was displayed.",log_file_to_write)
         upload_manifest()
 
@@ -246,6 +254,9 @@ def ship_balance(arr):
     # create a new frame for the grid
     grid_frame = tk.Frame(frame)
     grid_frame.grid(row=1, column=0, sticky="nsew")
+
+    global current_operation
+    current_operation = "balance"
 
     # create the grid
     for row in range(8):
@@ -328,7 +339,9 @@ def load_operation():
         fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
         fileLabel.pack()
 
-        new_array, best_cell = load(file_arr,container_name_entry.get(),container_weight_entry.get())
+        container_name = container_name_entry.get()
+
+        new_array, best_cell = load(file_arr,container_name,container_weight_entry.get())
         cell_update = [r(best_cell[0]), c(best_cell[1])]
 
         file_arr = new_array
@@ -358,8 +371,13 @@ def load_operation():
             grid_frame.columnconfigure(i, weight=1)
         for i in range(9):
             grid_frame.rowconfigure(i, weight=1)           # create the continue button
+
+        def finish_onload():
+            write_to_log_file(f"{container_name} is onloaded",log_file_to_write)
+            balance_or_transfer()
+
         continue_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
-                                    command=balance_or_transfer)
+                                    command=finish_onload)
         continue_button.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
 
         # function to alternate the background color of the red cell
@@ -446,7 +464,7 @@ def select_container(name):
 
     #actual dictionary value received from here
     global coord_list
-    moveDict, coord_list = unload(file_arr, name[0])
+    moveDict, coord_list = unload(file_arr.copy(), name[0])
     coord_list.insert(0, moveDict)
 
     print(coord_list)
@@ -586,7 +604,10 @@ def animation(coordinates):
         animation(coordinates)
 
     def finish():
-        write_to_log_file(f"{current_container} is {current_operation}", log_file_to_write)
+        if current_operation == "balance":
+            write_to_log_file("The ship has been balanced according to the legal definition of balancing.", log_file_to_write)
+        else:
+            write_to_log_file(f"{current_container} is {current_operation}", log_file_to_write)
         balance_or_transfer()
 
     # if len(coordinates) != 1:
@@ -622,7 +643,7 @@ def animation(coordinates):
     else:
        # create the continue button
        finish_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
-                                   command=balance_or_transfer)
+                                   command=finish)
        finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
 
     # function to alternate the background color of the red cell
@@ -690,6 +711,7 @@ def input_name():
 def add_comment():
     def submit_comment():
         comment = comment_entry.get("1.0",tk.END)
+        comment = comment.rstrip('\n')
         write_to_log_file(comment,log_file_to_write)
         comment_prompt.destroy() # Close the prompt window after submission
 
