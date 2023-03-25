@@ -82,6 +82,7 @@ def create_new_log_file():
     welcome_label = tk.Label(frame, text=f"Creating default log file named '{log_file_to_write}'."
                                          "\nWould you like to append the current year?"
                                          f"\nCurrent Year: {current_year} ", font=("Helvetica", 18))
+    open(log_file_to_write, 'w').close()
     welcome_label.pack(pady=50)
 
     button_frame = tk.Frame(frame)
@@ -102,7 +103,7 @@ def yes_append_year():
 
     global log_file_to_write
     log_file_to_write = f'KeoghLongBeach{current_year}.txt'
-
+    open(log_file_to_write, 'w').close()
     welcome_label = tk.Label(frame, text=f"Created default log file '{log_file_to_write}'.", font=("Helvetica", 18))
     welcome_label.pack(pady=50)
 
@@ -117,7 +118,7 @@ def no_append_year():
     welcome_label = tk.Label(frame, text=f"Created default log file 'KeoghLongBeach.txt'.",
                              font=("Helvetica", 18))
     welcome_label.pack(pady=50)
-
+    open(log_file_to_write, 'w').close()
     # Continue
     continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manifest)
     continue_button.pack(pady=50)
