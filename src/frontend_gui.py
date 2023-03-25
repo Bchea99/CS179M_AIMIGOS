@@ -284,9 +284,12 @@ def ship_balance(arr):
     balanceData = balance_ship(arr_copy)
     #returns balanceData = (leftDictionary, rightDictionary, total_time_taken)
     #here balanceData is not a dictionary
-    order_of_operations(balanceData)
-
-
+    if isinstance(balanceData[0], dict):
+        order_of_operations(balanceData)
+    elif isinstance(balanceData[0][0],list):
+        global file_arr
+        file_arr = balanceData
+        sift_notification(file_arr)
 
 
 def container_transfer():
@@ -472,6 +475,43 @@ def select_container(name):
                              command=lambda: order_of_operations(coord_list))
     generate_order.pack()
 
+def sift_notification(coords):
+
+    for widget in frame.winfo_children():
+        widget.destroy()
+        # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
+
+    operations = []
+
+    for i in validMoves:
+        ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"
+        operations.append(ops)
+
+    print(operations)
+    # operations = ["Move (2,1) to (2,3)", "Move (4,1) to (0,1)", "Move (X,Y) to (Z, Y)"]
+
+    label = tk.Label(frame, text="The application was unable to balance your ship.\n"
+                                 "Please deploy the SIFT Method: by removing all containers from the ship and placing them back"
+                                 " matching the following configuration\n", font=("Helvetica", 18))
+    label.pack()
+
+    # create a new frame for the grid
+    grid_frame = tk.Frame(frame)
+    grid_frame.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
+
+    global file_arr
+
+    # create the grid
+    for row in range(8):
+        for col in range(12):
+            container_name = file_arr[row][col][0]
+            cell = tk.Label(grid_frame, text=container_name, font=("Helvetica", 16), borderwidth=1, relief="solid")
+            cell.grid(row=row, column=col, sticky="nsew")
+
+    finish_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
+                               command=balance_or_transfer)
+    finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
+
 def order_of_operations(coords):
     for widget in frame.winfo_children():
         widget.destroy()
@@ -497,7 +537,6 @@ def order_of_operations(coords):
             if type(coord)!=int:
                 if coord['name'] != '':
                     validMoves.append(coord)
-
 
     print(validMoves)
     #we reverse here to get the order of removing from the top to the desired container
