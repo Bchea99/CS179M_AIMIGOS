@@ -135,6 +135,12 @@ def load_unload_ship(arr, op, name, weight=0):
 
     return move_dict
 
+def unload(arr,name):
+    c_name = name
+
+    log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n")
+
+
 # Balance ship: Heavier side of ship is no more than 10%
 # weight of lighter side
 def balance_ship(arr):
@@ -244,6 +250,35 @@ def check_unbalance(l_w, r_w):
     min_side = min(l_w,r_w)
     return (((max_side - min_side) / max_side) > 0.1)
 
+#define getters
+def getName(name):
+    return name
+
+def getFirst(first):
+    return first
+
+def getTime_taken(time_taken):
+    return time_taken
+
+def getTime_to_move(time_to_move):
+    return time_to_move
+
+def getPrev_coords(prev_coords):
+    return prev_coords
+
+
+def getDict(name,first,next,time_taken,time_to_move,prev_coords):
+    moveDict = {
+        "prev_coords": prev_coords,
+        "name": name,
+        "first": first,
+        "next": next,
+        "time_taken": time_taken,
+        "time_to_move": time_to_move
+    }
+    return moveDict
+
+
 # Helper for balance/unload optimal move for container [recursive]
 # cell is to be moved, loc is column to start with, mod is to either move right (+1) or move left (-1)
 # if loc is -1, cell is to be unloaded (removed from ship array)
@@ -310,8 +345,6 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
         time_to_move += 1 # +1 minute each row gone down
     # place the cell at [i, cell_c]
     arr[r(i)][c(cell_c)] = cell
-
-
 
     print(f"[{i}, {cell_c}] in the ship.") # instruction
     return moveDict #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
