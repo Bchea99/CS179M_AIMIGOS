@@ -299,56 +299,58 @@ def load_operation():
     entry_width = label_width  # Subtract a bit to account for padding and borders
 
     # Create the First Name entry box
-    first_name_label = tk.Label(frame, text="Container Weight:")
-    first_name_label.pack()
-    first_name_entry = tk.Entry(frame, width=entry_width)
-    first_name_entry.pack()
+    container_weight_label = tk.Label(frame, text="Container Weight:")
+    container_weight_label.pack()
+    container_weight_entry = tk.Entry(frame, width=entry_width)
+    container_weight_entry.pack()
 
     # Create the Last Name entry box
-    last_name_label = tk.Label(frame, text="Container Name:")
-    last_name_label.pack()
-    last_name_entry = tk.Entry(frame, width=entry_width)
-    last_name_entry.pack()
+    container_name_label = tk.Label(frame, text="Container Name:")
+    container_name_label.pack()
+    container_name_entry = tk.Entry(frame, width=entry_width)
+    container_name_entry.pack()
 
     def load_instruction():
+        global file_arr
+
+        new_array, best_cell = load(file_arr,container_name_entry.get(),container_weight_entry.get())
+        cell_update = [r(best_cell[0]), c(best_cell[1])]
+
+        file_arr = new_array
+
         for widget in frame.winfo_children():
             widget.destroy()
 
         # Create a label with the instructions
         label_text = "Please load the container to the indicated spot"
         label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
-        label.grid(row=0, column=0, columnspan=12)
+        label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
 
         # create a new frame for the grid
         grid_frame = tk.Frame(frame)
-        grid_frame.grid(row=1, column=0, sticky="nsew")
+        grid_frame.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
 
         # create the grid
         for row in range(8):
             for col in range(12):
-                if(row == 0 and col == 0): #This will be changed to if
-                    cell = tk.Label(grid_frame, font=("Helvetica", 16), borderwidth=1, relief="solid", bg='red')
-                    cell.grid(row=row, column=col, sticky="nsew")
-                else:
-                    cell = tk.Label(grid_frame, text="Test", font=("Helvetica", 16), borderwidth=1, relief="solid")
-                    cell.grid(row=row, column=col, sticky="nsew")
+                container_name = file_arr[row][col][0]
+                cell = tk.Label(grid_frame, text=container_name, font=("Helvetica", 16), borderwidth=1, relief="solid")
+                cell.grid(row=row, column=col, sticky="nsew")
 
         # configure the grid to expand and fill the remaining space
         grid_frame.columnconfigure(0, weight=1)
         for i in range(12):
             grid_frame.columnconfigure(i, weight=1)
         for i in range(9):
-            grid_frame.rowconfigure(i, weight=1)
-
-            # create the continue button
+            grid_frame.rowconfigure(i, weight=1)           # create the continue button
         continue_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
                                     command=balance_or_transfer)
-        continue_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
+        continue_button.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
 
         # function to alternate the background color of the red cell
         def alternate_color():
             # we need a way to bring a value in
-            cell = grid_frame.grid_slaves(row=0,column=0)[0] #Backend needs a way to find the position
+            cell = grid_frame.grid_slaves(row=cell_update[0],column=cell_update[1])[0] #Backend needs a way to find the position
             current_color = cell.cget("bg")
             new_color = "white" if current_color == "red" else "red"
             cell.config(bg=new_color)
