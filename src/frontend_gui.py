@@ -425,14 +425,13 @@ def select_container(name):
     #Inserting functionality for unloading here assuming that we only select containers when unloading
 
     #actual dictionary value received from here
-    moveDict = load_unload_ship(file_arr, "u", name[0])
-    print(moveDict)
+    global coord_list
+    moveDict, coord_list = unload(file_arr, name[0])
+    coord_list.insert(0, moveDict)
 
-    global current_container
-    current_container = name
-
+    print(coord_list)
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
-                             command=lambda: order_of_operations(moveDict))
+                             command=lambda: order_of_operations(coord_list))
     generate_order.pack()
 
 def order_of_operations(coords):
@@ -444,6 +443,9 @@ def order_of_operations(coords):
         # a tuple composed of the left and right dict vals (balancing)
         # an actual dict val for the movement on a single page (unloading)
 
+    global orderOps
+
+
     validMoves = []
     operation = ""
     operations = []
@@ -452,11 +454,15 @@ def order_of_operations(coords):
     if type(coords) == dict:
         validMoves.append(coords)
     else:
-        for coord in coords[:-1]:
-            if coord['name'] != '':
-                validMoves.append(coord)
+        for coord in coords:
+            if type(coord)!=int:
+                if coord['name'] != '':
+                    validMoves.append(coord)
 
 
+    print(validMoves)
+    #we reverse here to get the order of removing from the top to the desired container
+    validMoves = reversed(validMoves)
     for i in validMoves:
         ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"
         operations.append(ops)
@@ -471,16 +477,9 @@ def order_of_operations(coords):
         label = tk.Label(frame, text=operation, font=("Helvetica", 18))
         label.pack()
 
-    coordinates = [[2, 1], [2, 3], [3, 4], [3,3], [5,2], [6,1]]
 
-    #gotta find a way to get coordinates in here
-    #coords = cycleCoords(coords)
-
-    #Here we store the coordinates as tuples
-    #dict(coordinates) = coords
-    #oordinates.append()
-    # here we take in back end coordinates
-    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(coords))
+    # here we take in back end coordinates                                                                          #reverse the coordinates here for same reason as above
+    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(reversed(coords)))
 #                             command=lambda: animation(coordinates))
 
     previous_instructions = []
@@ -497,12 +496,15 @@ def animation(coordinates):
     validMoves = []
 
     print(coordinates)
-    if type(coordinates) == dict:
-        validMoves.append(coordinates)
-    else:# we need to implement a check to see what coords are empty
-        for coord in coordinates[:-1]:
-            if coord['name'] != '':
-                validMoves.append(coord)
+    #if type(coordinates) == dict:
+        #validMoves.append(coordinates)
+    #else:# we need to implement a check to see what coords are empty
+
+
+    #filters out non dictionary values
+    for coord in coordinates:
+        if type(coord) == dict:
+            validMoves.append(coord)
 
 
     # list of first and second coords append dictionary values of first and next
@@ -519,8 +521,6 @@ def animation(coordinates):
     first = first_coords.pop(0)
     second = second_coords.pop(0)
 
-
-    #we should wrap this label in an if loop to check if unload or balance
     # Create a label with the instructions
     label_text = "Move" + str(first) + "to" + str(second)
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
@@ -693,7 +693,9 @@ if __name__ == "__main__":
         'time_taken': 0,
         'time_to_move': 0
     }
+    orderOps = []
     validMoves = []
+    coord_list = []
 
     root = tk.Tk()
     root.geometry(

@@ -179,7 +179,10 @@ def load(arr,name,weight=0):
 def unload(arr,name):
     c_name = name
     log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n")
-    return move_c(arr, [c_name, 0], -1, -1, 0,coord_list=[])
+    unloadedContainer, coord_list = move_c(arr, [c_name, 0], -1, -1, 0, coord_list=[])
+
+    return unloadedContainer, coord_list
+    #return move_c(arr, [c_name, 0], -1, 0, 0, coord_list=[])
 
 # Balance ship: Heavier side of ship is no more than 10%
 # weight of lighter side
@@ -262,10 +265,10 @@ def balance_ship(arr):
 
     for cell in to_move_right:
         #total_time_taken += move_c(arr, cell, 7, 1, 0)
-        move_dict_R = move_c(arr, cell, 7, 1, 0, coord_list=[])
+        move_dict_R, coord_list = move_c(arr, cell, 7, 1, 0, coord_list=[])
     for cell in to_move_left:
         #total_time_taken += move_c(arr, cell, 6, -1,0)
-        move_dict_L = move_c(arr, cell, 6, -1, 0, coord_list=[])
+        move_dict_L, coord_list = move_c(arr, cell, 6, -1, 0, coord_list=[])
 
     #index 0 is left operations, index 1 is right, index 3 is total time
 
@@ -328,24 +331,25 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
     row_c,cell_c = find_cell(arr, cell) # get cell's index
     j = cell_c # orginal cell column
     i = 8 # current row number
-    name = 'name'
-    time_to_move = 0
 
+    time_to_move = 0
     moveDict = {
-        "prev_coords": coord_list,
+        #"prev_coords": coord_list,
         "name": cell[0],
         "first": (row_c, j),
         "next": (i, cell_c),
         "time_taken": time_taken,
         "time_to_move": time_to_move
     }
+    currCoord = moveDict.copy()
     while i != row_c: # loop down row to cell, move other containers out of the way
         curr_cell = arr[r(i)][c(cell_c)]
         if curr_cell[0] != "UNUSED" and curr_cell[0] != "NAN":
             out_bound = -1
             if (cell_c - mod <= 0) or (cell_c - mod >= 13): # so recurs loc doesn't go out of bounds
                 out_bound = 1
-            #moveDict = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
+            currCoord,coord_list = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
+            coord_list.append(currCoord)
         i -= 1
     # here, access to container with nothing above, time to move to loc column
     # make current cell UNUSED
@@ -357,16 +361,13 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
         moveDict['name']=cell[0]
         #return statement just returns time
         #return time_taken + r(i) + c(cell_c) + 2 # take previous time taken + current container movement + (2 ship->truck)
-        return moveDict
-
+        return moveDict, coord_list
     # check that no column from cell_c to loc is completely full
     # if any are, move the top container out of the way
     for col in range(cell_c + mod, loc + mod, mod):
         curr_cell = arr[r(8)][c(col)]
         if curr_cell[0] != "UNUSED":
             coord_list, time_taken = move_c(arr, curr_cell, col + mod, mod, time_taken, coord_list)
-
-
     # get to loc column
     time_to_move = 0 # for minute calculations
     print(f"Move {cell[0]} container with weight {cell[1]} from [{i}, {cell_c}] in the ship to ", end = '') # instruction
@@ -385,8 +386,10 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
     arr[r(i)][c(cell_c)] = cell
     moveDict["next"] = (i,cell_c)
 
+    #moveDict['prev_coords'] = coord_list.append(move_c())
     print(f"[{i}, {cell_c}] in the ship.") # instruction
-    return moveDict #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
+    #return moveDict #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
+    return moveDict, coord_list
 
 # Helper for move_c to return arr index of cell
 # cell is guaranteed to be in arr
