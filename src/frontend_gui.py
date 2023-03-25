@@ -425,12 +425,13 @@ def select_container(name):
     #Inserting functionality for unloading here assuming that we only select containers when unloading
 
     #actual dictionary value received from here
-    moveDict = unload(file_arr, name[0])
-    print(moveDict)
+    global coord_list
+    moveDict, coord_list = unload(file_arr, name[0])
+    coord_list.insert(0, moveDict)
 
-
+    print(coord_list)
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
-                             command=lambda: order_of_operations(moveDict))
+                             command=lambda: order_of_operations(coord_list))
     generate_order.pack()
 
 def order_of_operations(coords):
@@ -450,14 +451,18 @@ def order_of_operations(coords):
     operations = []
     print(coords)
     # we need to implement a check to see what coords are empty
-    if type(coords) == dict:
-        validMoves.append(coords)
-    else:
-        for coord in coords[:-1]:
-            if coord['name'] != '':
-                validMoves.append(coord)
+    #if type(coords) == dict:
+        #validMoves.append(coords)
+    #else:
+
+    for coord in coords:
+        if coord['name'] != '':
+            validMoves.append(coord)
 
 
+    print(validMoves)
+    #we reverse here to get the order of removing from the top to the desired container
+    validMoves = reversed(validMoves)
     for i in validMoves:
         ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"
         operations.append(ops)
@@ -472,16 +477,9 @@ def order_of_operations(coords):
         label = tk.Label(frame, text=operation, font=("Helvetica", 18))
         label.pack()
 
-    coordinates = [[2, 1], [2, 3], [3, 4], [3,3], [5,2], [6,1]]
 
-    #gotta find a way to get coordinates in here
-    #coords = cycleCoords(coords)
-
-    #Here we store the coordinates as tuples
-    #dict(coordinates) = coords
-    #oordinates.append()
-    # here we take in back end coordinates
-    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(coords))
+    # here we take in back end coordinates                                                                          #reverse the coordinates here for same reason as above
+    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(reversed(coords)))
 #                             command=lambda: animation(coordinates))
 
     previous_instructions = []
@@ -498,12 +496,13 @@ def animation(coordinates):
     validMoves = []
 
     print(coordinates)
-    if type(coordinates) == dict:
-        validMoves.append(coordinates)
-    else:# we need to implement a check to see what coords are empty
-        for coord in coordinates[:-1]:
-            if coord['name'] != '':
-                validMoves.append(coord)
+    #if type(coordinates) == dict:
+        #validMoves.append(coordinates)
+    #else:# we need to implement a check to see what coords are empty
+
+    for coord in coordinates:
+        #if coord['name'] != '':
+        validMoves.append(coord)
 
 
     # list of first and second coords append dictionary values of first and next
@@ -694,6 +693,7 @@ if __name__ == "__main__":
     }
     orderOps = []
     validMoves = []
+    coord_list = []
 
     root = tk.Tk()
     root.geometry(

@@ -180,7 +180,7 @@ def unload(arr,name):
     c_name = name
     log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n")
     unloadedContainer, coord_list = move_c(arr, [c_name, 0], -1, -1, 0, coord_list=[])
-    print(coord_list)
+
     return unloadedContainer, coord_list
     #return move_c(arr, [c_name, 0], -1, 0, 0, coord_list=[])
 
