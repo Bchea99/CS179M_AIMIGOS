@@ -263,19 +263,26 @@ def balance_ship(arr):
         'time_to_move': 0
     }
 
+    coord_listR = []
+    coord_listL = []
 
     for cell in to_move_right:
         #total_time_taken += move_c(arr, cell, 7, 1, 0)
-        move_dict_R, coord_list = move_c(arr, cell, 7, 1, 0, coord_list=[])
+        move_dict_R, coord_listR = move_c(arr, cell, 7, 1, 0, coord_list=[])
     for cell in to_move_left:
         #total_time_taken += move_c(arr, cell, 6, -1,0)
-        move_dict_L, coord_list = move_c(arr, cell, 6, -1, 0, coord_list=[])
+        move_dict_L, coord_listL = move_c(arr, cell, 6, -1, 0, coord_list=[])
 
     #index 0 is left operations, index 1 is right, index 3 is total time
 
 
     total_time_taken = move_dict_L['time_to_move'] + move_dict_R['time_to_move']
+    coord_list = coord_listR + coord_listL
     balanceData = (move_dict_L, move_dict_R, total_time_taken)
+
+    for data in balanceData:
+        if type(data) == dict:
+            coord_list.insert(0,data)
 
     print("\nContainers to move to the left [port]:",to_move_left)
     print("Containers to move to the right [starboard]:",to_move_right)
@@ -284,7 +291,7 @@ def balance_ship(arr):
     #log_file.write(f"{get_date_time()} The ship has been balanced according to the legal definition of balancing.\n") # log file balancing success
 
     print(balanceData)
-    return balanceData
+    return coord_list
 # Helper to balance_ship function
 # Returns false if the two sides of ship are balanced;; true otherwise.
 def check_unbalance(l_w, r_w): 
