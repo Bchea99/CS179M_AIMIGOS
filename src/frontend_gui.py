@@ -489,15 +489,7 @@ def animation(coordinates):
     for widget in frame.winfo_children():
         widget.destroy()
 
-#    first_coords = coordinates.pop(0)
-#    second_coords = coordinates[0]
 #
-#    label = tk.Label(frame, text=f"Move ({first_coords[0]},{first_coords[1]}) to ({second_coords[0]},{second_coords[1]})", font=("Helvetica", 18))
-#    label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
-
-    # create a new frame for the grid
-#    grid_frame = tk.Frame(frame)
-#    grid_frame.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
 
 # pops a list - might need a revision
     # first_coords = coordinates.pop(0)
@@ -535,11 +527,11 @@ def animation(coordinates):
     # Create a label with the instructions
     label_text = "Move" + str(first) + "to" + str(second)
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
-    label.grid(row=0, column=0, columnspan=12)
+    label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
 
     # create a new frame for the grid
     grid_frame = tk.Frame(frame)
-    grid_frame.grid(row=1, column=0, sticky="nsew")
+    grid_frame.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
 
     global file_arr
 
@@ -565,41 +557,41 @@ def animation(coordinates):
         write_to_log_file(f"{current_container} is {current_operation}", log_file_to_write)
         balance_or_transfer()
 
-    if len(coordinates) != 1:
-        root.bind("<space>", lambda event: animation(coordinates))
-        # create the continue button
-        if(previous_instructions):
-            back_button = tk.Button(frame, text="Back", font=("Helvetica", 16),
-                                        command= go_back)
-            back_button.place(relx=0.44,rely=0.8, anchor=tk.CENTER)
-        # create the continue button
-        continue_button = tk.Button(frame, text="Next (Spacebar)", font=("Helvetica", 16),
-                                    command= next)
-        continue_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
+    # if len(coordinates) != 1:
+    #     root.bind("<space>", lambda event: animation(coordinates))
+    #     # create the continue button
+    #     if(previous_instructions):
+    #         back_button = tk.Button(frame, text="Back", font=("Helvetica", 16),
+    #                                     command= go_back)
+    #         back_button.place(relx=0.44,rely=0.8, anchor=tk.CENTER)
+    #     # create the continue button
+    #     continue_button = tk.Button(frame, text="Next (Spacebar)", font=("Helvetica", 16),
+    #                                 command= next)
+    #     continue_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
+    # else:
+    #     root.unbind("<space>")
+    #     root.bind("<space>", lambda event: balance_or_transfer())
+    #     if(previous_instructions):
+    #         back_button = tk.Button(frame, text="Back", font=("Helvetica", 16),
+    #                                 command= go_back)
+    #         back_button.place(relx=0.44, rely=0.8, anchor=tk.CENTER)
+    #
+    #     # create the continue button
+    #     finish_button = tk.Button(frame, text="Done (Spacebar)", font=("Helvetica", 16),
+    #                                 command=finish)
+    #     finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
+
+
+    if len(validMoves) != 1:
+       # create the continue button
+       continue_button = tk.Button(frame, text="Next", font=("Helvetica", 16),
+                                   command= lambda: animation(coordinates))
+       continue_button.place(relx=0.44, rely=0.8, anchor=tk.CENTER)
     else:
-        root.unbind("<space>")
-        root.bind("<space>", lambda event: balance_or_transfer())
-        if(previous_instructions):
-            back_button = tk.Button(frame, text="Back", font=("Helvetica", 16),
-                                    command= go_back)
-            back_button.place(relx=0.44, rely=0.8, anchor=tk.CENTER)
-
-        # create the continue button
-        finish_button = tk.Button(frame, text="Done (Spacebar)", font=("Helvetica", 16),
-                                    command=finish)
-        finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
-
-
-#    if len(validMoves) != 1:
-#        # create the continue button
-#        continue_button = tk.Button(frame, text="Next", font=("Helvetica", 16),
-#                                    command= lambda: animation(coordinates))
-#        continue_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
-#    else:
-#        # create the continue button
-#        finish_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
-#                                    command=balance_or_transfer)
-#        finish_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
+       # create the continue button
+       finish_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
+                                   command=balance_or_transfer)
+       finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
 
     # function to alternate the background color of the red cell
     def alternate_color():
@@ -709,7 +701,7 @@ if __name__ == "__main__":
 
     # Create a frame to hold all of the content
     frame = tk.Frame(root)
-    frame.pack(expand=True)
+    frame.pack(expand=True, fill="both")
 
     # Create a menu bar
     menu_bar = tk.Menu(root)
