@@ -225,10 +225,10 @@ def balance_ship(arr):
         if(time.time() - s_time >= 5):
             print("\n\nBalance not possible -_- PERFORM SIFT (put all containers in buffer zone, heaviest switch back and forth till row is filled, move up)\n")
             log_file.write(f"{get_date_time()} The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.\n") # log file balancing fail
-            time_taken = perform_sift(arr)
-            print(f"The estimated time of this SIFT operation is {time_taken} minutes") # time estimation
+            sift_configuration = perform_sift(arr)
+            #print(f"The estimated time of this SIFT operation is {time_taken} minutes") # time estimation
             log_file.write(f"{get_date_time()} SIFT has been completed.\n") # log file balancing fail
-            return
+            return sift_configuration
     
     # Balance is possible, determine which cells have to move to the other side
     to_move_right = []
@@ -423,6 +423,8 @@ def perform_sift(arr):
     # add all containers to buffer zone
     time_taken = 0
     buffer = []
+    coord_list = []
+
     for col in range(1, 13):
         for row in range(8, 0, -1):
             cell = arr[r(row)][c(col)]
@@ -431,8 +433,16 @@ def perform_sift(arr):
                 arr[r(row)][c(col)] = ["UNUSED", 0] # clear out cell
                 time_taken += 8 # ship -> buffer and buffer -> ship
                 print(f"Move {cell[0]} container with weight {cell[1]} from [{row}, {col}] in the ship to the buffer zone.") # instruction
+                coord_list.append({
+                    "name": cell[0],
+                    "first": (row,col),
+                    "next": (-1, -1),
+                    "time_taken": time_taken,
+                })
+
     # sort them by weight [descending]
     buffer.sort(key = lambda x: x[1], reverse = True)
+
     # place heaviest container, alternate port and starboard sides
     mod = -1 # to alternate 
     for cell in buffer:
@@ -447,7 +457,7 @@ def perform_sift(arr):
         time_taken += r(row) + c(col)
         print(f"Move {cell[0]} container with weight {cell[1]} from the buffer zone to [{row}, {col}] in the ship.") # instruction
         mod *= -1 # switch side
-    return time_taken
+    return arr
 
 # MAIN: method below
 # Log file initialization
