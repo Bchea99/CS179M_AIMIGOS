@@ -411,7 +411,7 @@ def unload_operation(arr):
         widget.destroy()
 
     fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
-    fileLabel.grid(row=0, column = 0, columnspan = 12)
+    fileLabel.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
 
     global current_operation
     current_operation = "offloaded"
@@ -419,11 +419,11 @@ def unload_operation(arr):
     # Create a label with the instructions
     label_text = "Please select the container to unload"
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
-    label.grid(row=0, column=0, columnspan=12)
+    label.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
 
     # create a new frame for the grid
     grid_frame = tk.Frame(frame)
-    grid_frame.grid(row=1, column=0, sticky="nsew")
+    grid_frame.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
 
     # create the grid
     for row in range(8):
@@ -434,9 +434,9 @@ def unload_operation(arr):
             cell.bind("<Button-1>", lambda event, name=cell_name: select_container(name))
 
     # create the continue button
-    continue_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
+    continue_button = tk.Button(frame, text="Back", font=("Helvetica", 16),
                                 command=balance_or_transfer)
-    continue_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
+    continue_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
 
     # Create the Submit button
 
