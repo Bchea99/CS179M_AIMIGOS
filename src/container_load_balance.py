@@ -101,7 +101,7 @@ def write_new_manifest(f_to_write, arr):
 
 # Load/Unload
 # 1 minute within ship, 2 minutes to truck, 4 minutes ship/buffer
-#this should return a tuple
+'''
 def load_unload_ship(arr, op, name, weight=0):
     move_dict = {
         'coord_list': [],
@@ -147,7 +147,39 @@ def load_unload_ship(arr, op, name, weight=0):
         #print(f"The estimated time of this unload operation is {time_taken} minutes") # time estimation
         log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n") # log file offloading
 
-    return move_dict
+    return move_dict'''
+
+def load(arr,name,weight=0):
+    ##we don't need this
+    # c_name = input("Enter exact name of container to load.\n-> ") # container name to move
+    # c_weight = int(input("Enter weight of container\n-> ")) # container weight
+    c_name = name
+    c_weight = weight
+    cell_to_insert = [c_name, c_weight]
+
+    # search for least time to insert
+    least_time = float('inf')
+    best_loc = [-1, -1]
+    for col in range(1, 13):
+        i = 8
+        if arr[r(8)][c(col)][0] != "UNUSED":  # check if top of column is already full
+            continue
+        while i > 1 and arr[r(i - 1)][c(col)][0] == "UNUSED":
+            i -= 1
+        curr_time = r(i) + c(col)
+        if curr_time < least_time:
+            least_time = curr_time
+            best_loc = [i, col]
+    arr[r(best_loc[0])][c(best_loc[1])] = cell_to_insert  # optimal location to place container [time]
+    print(f"The estimated time of this load operation is {least_time + 2} minutes")  # time estimation, +2 from truck -> ship
+    print(f"Move {c_name} container with weight {c_weight} from the truck to [{best_loc[0]}, {best_loc[1]}] on the ship.")  # instruction
+    log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n")  # log file onloading
+    return cell_to_insert
+
+def unload(arr,name):
+    c_name = name
+    log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n")
+    return move_c(arr, [c_name, 0], -1, -1, 0,coord_list=[])
 
 # Balance ship: Heavier side of ship is no more than 10%
 # weight of lighter side
@@ -258,6 +290,33 @@ def check_unbalance(l_w, r_w):
     min_side = min(l_w,r_w)
     return (((max_side - min_side) / max_side) > 0.1)
 
+#define getters
+def getName(name):
+    return name
+def getFirst(first):
+    return first
+
+def getTime_taken(time_taken):
+    return time_taken
+
+def getTime_to_move(time_to_move):
+    return time_to_move
+
+def getPrev_coords(prev_coords):
+    return prev_coords
+
+def getDict(name,first,next,time_taken,time_to_move,prev_coords):
+    moveDict = {
+        "prev_coords": prev_coords, #list
+        "name": name, #string
+        "first": first, #tuple
+        "next": next, #tuple
+        "time_taken": time_taken, #int
+        "time_to_move": time_to_move #int
+    }
+    return moveDict
+
+
 # Helper for balance/unload optimal move for container [recursive]
 # cell is to be moved, loc is column to start with, mod is to either move right (+1) or move left (-1)
 # if loc is -1, cell is to be unloaded (removed from ship array)
@@ -286,7 +345,7 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
             out_bound = -1
             if (cell_c - mod <= 0) or (cell_c - mod >= 13): # so recurs loc doesn't go out of bounds
                 out_bound = 1
-            moveDict = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
+            #moveDict = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
         i -= 1
     # here, access to container with nothing above, time to move to loc column
     # make current cell UNUSED
@@ -324,8 +383,6 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
         time_to_move += 1 # +1 minute each row gone down
     # place the cell at [i, cell_c]
     arr[r(i)][c(cell_c)] = cell
-
-
 
     print(f"[{i}, {cell_c}] in the ship.") # instruction
     return moveDict #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
