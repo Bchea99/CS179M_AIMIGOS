@@ -257,7 +257,8 @@ def ship_balance(arr):
         grid_frame.rowconfigure(i, weight=1)
 
     global balanceData #balanceData originall declared dict
-    balanceData = balance_ship(arr)
+    arr_copy = arr.copy()
+    balanceData = balance_ship(arr_copy)
     #returns balanceData = (leftDictionary, rightDictionary, total_time_taken)
     #here balanceData is not a dictionary
     order_of_operations(balanceData)
@@ -492,12 +493,6 @@ def animation(coordinates):
     for widget in frame.winfo_children():
         widget.destroy()
 
-#
-
-# pops a list - might need a revision
-    # first_coords = coordinates.pop(0)
-    # second_coords = coordinates[0]
-
     # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
     global valid_moves
     validMoves = []
@@ -522,8 +517,8 @@ def animation(coordinates):
 
 
 
-    first = first_coords.pop(len(validMoves)-1)
-    second = second_coords.pop(len(validMoves)-1)
+    first = first_coords.pop(0)
+    second = second_coords.pop(0)
 
 
     #we should wrap this label in an if loop to check if unload or balance
@@ -545,6 +540,10 @@ def animation(coordinates):
                 cell = tk.Label(grid_frame, text=container_name, font=("Helvetica", 16), borderwidth=1, relief="solid")
                 cell.grid(row=row, column=col, sticky="nsew")
 
+    #Container to move
+    first_container_info = file_arr[8 - first[0]][first[1]-1]
+    file_arr[8 - first[0]][first[1] - 1] = file_arr[8 - second[0]][second[1]-1]
+    file_arr[8 - second[0]][second[1] - 1] = first_container_info
 
     previous_instructions.append([first_coords])
 
@@ -588,7 +587,7 @@ def animation(coordinates):
     if len(validMoves) != 1:
        # create the continue button
        continue_button = tk.Button(frame, text="Next", font=("Helvetica", 16),
-                                   command= lambda: animation(coordinates))
+                                   command= lambda: animation(coord))
        continue_button.place(relx=0.44, rely=0.8, anchor=tk.CENTER)
     else:
        # create the continue button
