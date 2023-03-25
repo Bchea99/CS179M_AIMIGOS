@@ -36,17 +36,19 @@ def program_start():
         prompt_label.pack(pady=50)
 
         continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=check_name)
-        continue_button.pack(side="top", anchor="center",pady=50)
+        continue_button.pack(pady=50)
 
 #frame 1
 def start_a_new_log_file_prompt():
+
+    message = f"Welcome!"
 
     # Clear the existing widgets in the frame
     for widget in frame.winfo_children():
         widget.destroy()
 
     # Add a label to the frame with the welcome message
-    welcome_label = tk.Label(frame, text="Welcome!", font=("Helvetica", 18))
+    welcome_label = tk.Label(frame, text=message, font=("Helvetica", 18))
     welcome_label.pack(pady=50)
 
     # Add new log file prompt to the frame
@@ -57,7 +59,7 @@ def start_a_new_log_file_prompt():
     button_frame = tk.Frame(frame)
     button_frame.pack()
 
-    no_button = tk.Button(button_frame, text="No", font=("Helvetica", 16), command=load_existing_log_file)
+    no_button = tk.Button(button_frame, text="No", font=("Helvetica", 16), command=load_existing_log_file) #shift frame
     no_button.pack(side=tk.RIGHT, padx=10)
 
     yes_button = tk.Button(button_frame, text="Yes", font=("Helvetica", 16), command=create_new_log_file)
@@ -70,10 +72,10 @@ def create_new_log_file():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    append_year_label = tk.Label(frame, text="Creating default log file named 'KeoghLongBeach.txt'."
+    welcome_label = tk.Label(frame, text="Creating default log file named 'KeoghLongBeach.txt'."
                                          "\nWould you like to append the current year?"
                                          f"\nCurrent Year: {current_year} ", font=("Helvetica", 18))
-    append_year_label.pack(pady=50)
+    welcome_label.pack(pady=50)
 
     button_frame = tk.Frame(frame)
     button_frame.pack()
@@ -91,8 +93,8 @@ def yes_append_year():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    confirm_label = tk.Label(frame, text=f"Created default log file 'KeoghLongBeach{current_year}.txt'.", font=("Helvetica", 18))
-    confirm_label.pack(pady=50)
+    welcome_label = tk.Label(frame, text=f"Created default log file 'KeoghLongBeach{current_year}.txt'.", font=("Helvetica", 18))
+    welcome_label.pack(pady=50)
 
     # Continue
     continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manfiest)
@@ -102,9 +104,9 @@ def no_append_year():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    confirm_label = tk.Label(frame, text=f"Created default log file 'KeoghLongBeach.txt'.",
+    welcome_label = tk.Label(frame, text=f"Created default log file 'KeoghLongBeach.txt'.",
                              font=("Helvetica", 18))
-    confirm_label.pack(pady=50)
+    welcome_label.pack(pady=50)
 
     # Continue
     continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=upload_manfiest)
@@ -120,7 +122,7 @@ def resume():
     welcome_label.pack(pady=50)
 
     # Continue
-    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=program_start)
+    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16), command=program_start())
     continue_button.pack(pady=50)
 
 #frame 2
@@ -129,9 +131,9 @@ def load_existing_log_file():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    default_log_label = tk.Label(frame, text=f"Using default log file 'KeoghLongBeach{current_year}.txt'.",
+    welcome_label = tk.Label(frame, text=f"Using default log file 'KeoghLongBeach{current_year}.txt'.",
                              font=("Helvetica", 18))
-    default_log_label.pack(pady=50)
+    welcome_label.pack(pady=50)
 
     # Put the buttons in a new frame
     button_frame = tk.Frame(frame)
@@ -153,9 +155,9 @@ def upload_manfiest():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    upload_label = tk.Label(frame, text="Please upload a Manifest file",
+    label = tk.Label(frame, text="Please upload a Manifest file",
                              font=("Helvetica", 18))
-    upload_label.pack(pady=50)
+    label.pack(pady=50)
 
     selected_file = tk.Label(frame, text="No file selected",
                              font=("Helvetica", 18))
@@ -179,21 +181,20 @@ def upload_manfiest():
     button = tk.Button(frame, text="Select File", command=browse_file)
     button.pack(pady=50)
 
-#Here we want to call manifest_init() to translate it
+#frame 6
 def balance_or_transfer():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    root.unbind("<space>")
-
-    operation_label = tk.Label(frame, text="Please select an operation",
+    label = tk.Label(frame, text="Please select an operation",
                      font=("Helvetica", 18))
-    operation_label.pack(pady=50)
+    label.pack(pady=50)
 
     button_frame = tk.Frame(frame)
     button_frame.pack()
 
-    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command=ship_balance)
+    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command=lambda: ship_balance(file_arr))
+                               #command=ship_balance)
     balance_button.pack(side=tk.RIGHT, padx=10)
 
     manifest_button = tk.Button(button_frame, text="Upload another manifest file", font=("Helvetica", 16), command=upload_manfiest)
@@ -205,24 +206,56 @@ def balance_or_transfer():
 
 #Passing in an array for the ship balancing functionality
 def ship_balance(arr):
-    balance_ship(file_arr)
+    for widget in frame.winfo_children():
+        widget.destroy()
+
+    # Create a label with the instructions
+    label_text = "Commence Balancing"
+    label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
+    label.grid(row=0, column=0, columnspan=12)
+
+    # create a new frame for the grid
+    grid_frame = tk.Frame(frame)
+    grid_frame.grid(row=1, column=0, sticky="nsew")
+
+    # create the grid
+    for row in range(8):
+        for col in range(12):
+            cell_name = arr[row][col]
+            cell = tk.Label(grid_frame, text=cell_name[:10], font=("Helvetica", 16), borderwidth=1, relief="solid")
+            cell.grid(row=row, column=col, sticky="nsew")
+
+     # configure the grid to expand and fill the remaining space
+    grid_frame.columnconfigure(0, weight=1)
+    for i in range(12):
+        grid_frame.columnconfigure(i, weight=1)
+    for i in range(9):
+        grid_frame.rowconfigure(i, weight=1)
+
+    global balanceData #balanceData originall declared dict
+    balanceData = balance_ship(arr)
+    #returns balanceData = (leftDictionary, rightDictionary, total_time_taken)
+    #here balanceData is not a dictionary
+    order_of_operations(balanceData)
+
+
+
 
 def container_transfer():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    transfer_label = tk.Label(frame, text="Which type of transfer would you like to do?",
+    label = tk.Label(frame, text="Which type of transfer would you like to do?",
                      font=("Helvetica", 18))
-    transfer_label.pack(pady=50)
+    label.pack(pady=50)
 
     button_frame = tk.Frame(frame)
     button_frame.pack()
 
-    balance_button = tk.Button(button_frame, text="Unload", font=("Helvetica", 16), command=unload_operation)
+    balance_button = tk.Button(button_frame, text="Unload", font=("Helvetica", 16), command=lambda: unload_operation(file_arr))
     balance_button.pack(side=tk.RIGHT, padx=10)
 
-    transfer_button = tk.Button(button_frame, text="Load", font=("Helvetica", 16),
-                                command=load_operation)
+    transfer_button = tk.Button(button_frame, text="Load", font=("Helvetica", 16), command=load_operation)
     transfer_button.pack(side=tk.LEFT, padx=10)
 
 def load_operation():
@@ -231,8 +264,8 @@ def load_operation():
 
     # Create a label with the instructions
     label_text = "Please enter the information of the container you would like to load"
-    container_info_label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
-    container_info_label.pack(pady=50)
+    label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
+    label.pack(pady=50)
 
     # Calculate the width of the label and use it as the width for the entry boxes
     label_width = len(label_text)  # 11 is a rough estimate of the average character width
@@ -256,12 +289,12 @@ def load_operation():
 
         # Create a label with the instructions
         label_text = "Please load the container to the indicated spot"
-        load_container_label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
-        load_container_label.grid(row=0, column=0, columnspan=12, padx=60)
+        label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
+        label.grid(row=0, column=0, columnspan=12)
 
         # create a new frame for the grid
         grid_frame = tk.Frame(frame)
-        grid_frame.grid(row=1, column=0, sticky="nsew", padx=60)
+        grid_frame.grid(row=1, column=0, sticky="nsew")
 
         # create the grid
         for row in range(8):
@@ -270,10 +303,7 @@ def load_operation():
                     cell = tk.Label(grid_frame, font=("Helvetica", 16), borderwidth=1, relief="solid", bg='red')
                     cell.grid(row=row, column=col, sticky="nsew")
                 else:
-                    cell_name = f"Walmart Container"
-                    cell_weight = f"{row}{col}"
-                    cell = tk.Label(grid_frame, text=cell_name[:17] + "... " + cell_weight, font=("Helvetica", 16),
-                                    borderwidth=1, relief="solid", wraplength=135)
+                    cell = tk.Label(grid_frame, text="Test", font=("Helvetica", 16), borderwidth=1, relief="solid")
                     cell.grid(row=row, column=col, sticky="nsew")
 
         # configure the grid to expand and fill the remaining space
@@ -286,10 +316,11 @@ def load_operation():
             # create the continue button
         continue_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
                                     command=balance_or_transfer)
-        continue_button.grid(row=11, column=0, columnspan=12, sticky="nsew", padx=50)
+        continue_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
 
         # function to alternate the background color of the red cell
         def alternate_color():
+            # we need a way to bring a value in
             cell = grid_frame.grid_slaves(row=0,column=0)[0] #Backend needs a way to find the position
             current_color = cell.cget("bg")
             new_color = "white" if current_color == "red" else "red"
@@ -310,45 +341,92 @@ def load_operation():
                               command=load_instruction)
     submit_button.pack(side=tk.RIGHT,pady=50)
 
-def unload_operation():
+def unload_operation(arr):
     for widget in frame.winfo_children():
         widget.destroy()
 
-    def select_container(name):
-        label.configure(text=f"Unload {name}")
-        continue_button.place(relx=0.65, rely=0.8, anchor=tk.CENTER)
+    # Create a label with the instructions
+    label_text = "Please select the container to unload"
+    label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
+    label.grid(row=0, column=0, columnspan=12)
 
-    #    create a new frame for the grid
+    # create a new frame for the grid
     grid_frame = tk.Frame(frame)
-    grid_frame.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
+    grid_frame.grid(row=1, column=0, sticky="nsew")
 
     # create the grid
     for row in range(8):
         for col in range(12):
-            cell_name = f"Walmart Container"
-            cell_weight = f"{row}{col}"
-            cell = tk.Label(grid_frame, text=cell_name[:17] + "... " + cell_weight, font=("Helvetica", 16), borderwidth=1, relief="solid", wraplength=135)
+            cell_name = arr[row][col]
+            cell = tk.Label(grid_frame, text=cell_name[:10], font=("Helvetica", 16), borderwidth=1, relief="solid")
             cell.grid(row=row, column=col, sticky="nsew")
             cell.bind("<Button-1>", lambda event, name=cell_name: select_container(name))
 
-
-    label_text = "Please select a container to unload"
-    label = tk.Label(frame, text=label_text, font=("Helvetica", 16))
-    label.place(relx=0.5,rely=0.8, anchor=tk.CENTER)
+    # configure the grid to expand and fill the remaining space
+    grid_frame.columnconfigure(0, weight=1)
+    for i in range(12):
+        grid_frame.columnconfigure(i, weight=1)
+    for i in range(9):
+        grid_frame.rowconfigure(i, weight=1)
 
     # create the continue button
-    continue_button = tk.Button(frame, text="Continue", font=("Helvetica", 16),
-                                command=order_of_operations)
-
+    continue_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
+                                command=balance_or_transfer)
+    continue_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
 
     # Create the Submit button
 
 
-
-def order_of_operations():
+def select_container(name):
     for widget in frame.winfo_children():
         widget.destroy()
-    operations = ["Move (2,1) to (2,3)", "Move (4,1) to (0,1)", "Move (X,Y) to (Z, Y)"]
+
+    message = f"The container named {name} has been selected."
+    label = tk.Label(frame, text=message, font=("Helvetica", 18))
+    label.pack(pady=50)
+
+    back_button = tk.Button(frame, text="Back", font=("Helvetica", 16),
+                             command=unload_operation)
+    back_button.pack()
+
+    #Inserting functionality for unloading here assuming that we only select containers when unloading
+
+    #actual dictionary value received from here
+    moveDict = load_unload_ship(file_arr, "u", name[0])
+    print(moveDict)
+
+    generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
+                             command=lambda: order_of_operations(moveDict))
+    generate_order.pack()
+
+def order_of_operations(coords):
+    for widget in frame.winfo_children():
+        widget.destroy()
+        # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
+
+    #Here we can receive two potential values as the argument:
+        # a tuple composed of the left and right dict vals (balancing)
+        # an actual dict val for the movement on a single page (unloading)
+
+    validMoves = []
+    operation = ""
+    operations = []
+    print(coords)
+    # we need to implement a check to see what coords are empty
+    if type(coords) == dict:
+        validMoves.append(coords)
+    else:
+        for coord in coords[:-1]:
+            if coord['name'] != '':
+                validMoves.append(coord)
+
+
+    for i in validMoves:
+        ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"
+        operations.append(ops)
+
+    print(operations)
+    #operations = ["Move (2,1) to (2,3)", "Move (4,1) to (0,1)", "Move (X,Y) to (Z, Y)"]
 
     label = tk.Label(frame, text="Order of operations:", font=("Helvetica", 18))
     label.pack()
@@ -359,36 +437,84 @@ def order_of_operations():
 
     coordinates = [[2, 1], [2, 3], [3, 4], [3,3], [5,2], [6,1]]
 
-    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),
-                             command=lambda: animation(coordinates))
+    #gotta find a way to get coordinates in here
+    #coords = cycleCoords(coords)
+
+    #Here we store the coordinates as tuples
+    #dict(coordinates) = coords
+    #oordinates.append()
+    # here we take in back end coordinates
+    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(coords))
+#                             command=lambda: animation(coordinates))
 
     previous_instructions = []
-
+                             
     generate_animation.pack()
 
-def animation(coordinates):
 
+def animation(coordinates):
     for widget in frame.winfo_children():
         widget.destroy()
-        # Create a label with the instructions
 
-    first_coords = coordinates.pop(0)
-    second_coords = coordinates[0]
+#    first_coords = coordinates.pop(0)
+#    second_coords = coordinates[0]
+#
+#    label = tk.Label(frame, text=f"Move ({first_coords[0]},{first_coords[1]}) to ({second_coords[0]},{second_coords[1]})", font=("Helvetica", 18))
+#    label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
 
-    label = tk.Label(frame, text=f"Move ({first_coords[0]},{first_coords[1]}) to ({second_coords[0]},{second_coords[1]})", font=("Helvetica", 18))
-    label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
+    # create a new frame for the grid
+#    grid_frame = tk.Frame(frame)
+#    grid_frame.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
+
+# pops a list - might need a revision
+    # first_coords = coordinates.pop(0)
+    # second_coords = coordinates[0]
+
+    # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
+    global valid_moves
+    validMoves = []
+
+    print(coordinates)
+    if type(coordinates) == dict:
+        validMoves.append(coordinates)
+    else:# we need to implement a check to see what coords are empty
+        for coord in coordinates[:-1]:
+            if coord['name'] != '':
+                validMoves.append(coord)
+
+
+    # list of first and second coords append dictionary values of first and next
+    first_coords = []
+    second_coords = []
+    print(validMoves)
+    for i in validMoves:
+        first_coords.append(i['first'])
+        second_coords.append(i['next'])
+    print(validMoves)
+
+
+
+    first = first_coords.pop(len(validMoves)-1)
+    second = second_coords.pop(len(validMoves)-1)
+
+
+    #we should wrap this label in an if loop to check if unload or balance
+    # Create a label with the instructions
+    label_text = "Move" + str(first) + "to" + str(second)
+    label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
+    label.grid(row=0, column=0, columnspan=12)
 
     # create a new frame for the grid
     grid_frame = tk.Frame(frame)
-    grid_frame.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
+    grid_frame.grid(row=1, column=0, sticky="nsew")
+
+    global file_arr
 
     # create the grid
     for row in range(8):
         for col in range(12):
-                cell_name = f"Walmart Container"
-                cell_weight = f"{row}{col}"
-                cell = tk.Label(grid_frame, text=cell_name[:17] + "... " + cell_weight, font=("Helvetica", 16),
-                                borderwidth=1, relief="solid", wraplength=135)
+                container_name = file_arr[row][col][0]
+                cell = tk.Label(grid_frame, text=container_name, font=("Helvetica", 16), borderwidth=1, relief="solid")
                 cell.grid(row=row, column=col, sticky="nsew")
 
 
@@ -426,10 +552,25 @@ def animation(coordinates):
                                     command=balance_or_transfer)
         finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
 
+
+#    if len(validMoves) != 1:
+#        # create the continue button
+#        continue_button = tk.Button(frame, text="Next", font=("Helvetica", 16),
+#                                    command= lambda: animation(coordinates))
+#        continue_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
+#    else:
+#        # create the continue button
+#        finish_button = tk.Button(frame, text="Finished", font=("Helvetica", 16),
+#                                    command=balance_or_transfer)
+#        finish_button.grid(row=11, column=0, columnspan=6, sticky="nsew")
+
     # function to alternate the background color of the red cell
     def alternate_color():
-        cell1 = grid_frame.grid_slaves(row=first_coords[0], column=first_coords[1])[0]  # Backend needs a way to find the position
-        cell2 = grid_frame.grid_slaves(row=second_coords[0],column=second_coords[1])[0]
+        #lists of tuples
+        #first_coords = first
+        #second_coords = next
+        cell1 = grid_frame.grid_slaves(row=8 - first[0], column=first[1]-1)[0]  # Backend needs a way to find the position
+        cell2 = grid_frame.grid_slaves(row=8 - second[0],column=second[1]-1)[0]
         old_color = cell1.cget("bg")
         new_color = "white" if old_color == "red" else "red"
         cell1.config(bg=new_color)
@@ -500,7 +641,7 @@ def add_comment():
     submit_button.pack(side="bottom")
 
 def main():
-    load_operation()
+    program_start()
     root.mainloop()
 
 if __name__ == "__main__":
@@ -508,6 +649,17 @@ if __name__ == "__main__":
     #creating intial file
     file_name = "KeoghLongBeach.txt" #global file_name that should be converted into array
     file_arr = []
+    operation = "string"
+    balanceData = {
+        'coord_list': [],
+        'name': '',
+        'first': (),
+        'next': (),
+        'time_taken': 0,
+        'time_to_move': 0
+    }
+    validMoves = []
+
     root = tk.Tk()
     root.geometry(
         '{}x{}+0+0'.format(root.winfo_screenwidth(), root.winfo_screenheight()))  # Set window dimensions to full screen
@@ -515,7 +667,7 @@ if __name__ == "__main__":
 
     # Create a frame to hold all of the content
     frame = tk.Frame(root)
-    frame.pack(fill=tk.BOTH, expand=True)
+    frame.pack(expand=True)
 
     # Create a menu bar
     menu_bar = tk.Menu(root)
