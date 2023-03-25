@@ -157,12 +157,10 @@ def load(arr,name,weight=0):
             least_time = curr_time
             best_loc = [i, col]
     arr[r(best_loc[0])][c(best_loc[1])] = cell_to_insert  # optimal location to place container [time]
-    print(
-        f"The estimated time of this load operation is {least_time + 2} minutes")  # time estimation, +2 from truck -> ship
-    print(
-        f"Move {c_name} container with weight {c_weight} from the truck to [{best_loc[0]}, {best_loc[1]}] on the ship.")  # instruction
+    print(f"The estimated time of this load operation is {least_time + 2} minutes")  # time estimation, +2 from truck -> ship
+    print(f"Move {c_name} container with weight {c_weight} from the truck to [{best_loc[0]}, {best_loc[1]}] on the ship.")  # instruction
     log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n")  # log file onloading
-    return move_c()
+    return cell_to_insert
 
 def unload(arr,name):
     c_name = name
