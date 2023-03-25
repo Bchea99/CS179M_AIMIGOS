@@ -260,20 +260,19 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
 
     moveDict = {
         "prev_coords": coord_list,
-        "name": name,
+        "name": cell[0],
         "first": (row_c, j),
         "next": (i, cell_c),
         "time_taken": time_taken,
         "time_to_move": time_to_move
     }
-
     while i != row_c: # loop down row to cell, move other containers out of the way
         curr_cell = arr[r(i)][c(cell_c)]
         if curr_cell[0] != "UNUSED" and curr_cell[0] != "NAN":
             out_bound = -1
             if (cell_c - mod <= 0) or (cell_c - mod >= 13): # so recurs loc doesn't go out of bounds
                 out_bound = 1
-            time_taken = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
+            moveDict = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
         i -= 1
     # here, access to container with nothing above, time to move to loc column
     # make current cell UNUSED
@@ -286,6 +285,7 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
         #return statement just returns time
         #return time_taken + r(i) + c(cell_c) + 2 # take previous time taken + current container movement + (2 ship->truck)
         return moveDict
+
     # check that no column from cell_c to loc is completely full
     # if any are, move the top container out of the way
     for col in range(cell_c + mod, loc + mod, mod):
