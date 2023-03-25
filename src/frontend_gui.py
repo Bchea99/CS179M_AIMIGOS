@@ -447,7 +447,7 @@ def select_container(name):
 
     #actual dictionary value received from here
     global coord_list
-    moveDict, coord_list = unload(file_arr, name[0])
+    moveDict, coord_list = unload(file_arr.copy(), name[0])
     coord_list.insert(0, moveDict)
 
     print(coord_list)
