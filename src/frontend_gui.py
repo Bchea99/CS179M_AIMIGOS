@@ -105,7 +105,11 @@ def yes_append_year():
     for widget in frame.winfo_children():
         widget.destroy()
 
+
     global log_file_to_write
+
+    os.remove(log_file_to_write)
+
     log_file_to_write = f'KeoghLongBeach{current_year}.txt'
     open(log_file_to_write, 'w').close()
     welcome_label = tk.Label(frame, text=f"Created default log file '{log_file_to_write}'.", font=("Helvetica", 18))
