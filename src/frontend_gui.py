@@ -504,7 +504,11 @@ def animation(coordinates):
     #filters out non dictionary values
     for coord in coordinates:
         if type(coord) == dict:
-            validMoves.append(coord)
+            if coord["name"] != "":
+                validMoves.append(coord)
+        elif isinstance(coord,str):
+            validMoves.append(coordinates)
+            break
 
 
     # list of first and second coords append dictionary values of first and next
@@ -522,7 +526,10 @@ def animation(coordinates):
     second = second_coords.pop(0)
 
     # Create a label with the instructions
-    label_text = "Move" + str(first) + "to" + str(second)
+    if second[0] == 8:
+        label_text = "Move" + str(first) + " to the truck"
+    else:
+        label_text = "Move" + str(first) + "to" + str(second)
     label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
     label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
 
