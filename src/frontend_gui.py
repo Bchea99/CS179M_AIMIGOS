@@ -504,7 +504,11 @@ def animation(coordinates):
     #filters out non dictionary values
     for coord in coordinates:
         if type(coord) == dict:
-            validMoves.append(coord)
+            if coord["name"] != "":
+                validMoves.append(coord)
+        elif isinstance(coord,str):
+            validMoves.append(coordinates)
+            break
 
 
     # list of first and second coords append dictionary values of first and next
