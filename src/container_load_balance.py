@@ -383,6 +383,7 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
         time_to_move += 1 # +1 minute each row gone down
     # place the cell at [i, cell_c]
     arr[r(i)][c(cell_c)] = cell
+    moveDict["next"] = (i,cell_c)
 
     print(f"[{i}, {cell_c}] in the ship.") # instruction
     return moveDict #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
