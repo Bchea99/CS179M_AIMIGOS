@@ -333,7 +333,7 @@ def ship_balance(arr):
     elif isinstance(balanceData[0][0],list):
         global file_arr
         file_arr = balanceData
-        sift_notification(file_arr)
+        sift_notification(file_arr, estimated_time)
 
 
 def container_transfer():
@@ -398,13 +398,16 @@ def load_operation():
         new_array, best_cell = load(file_arr,load_container_name,int(container_weight_entry.get()))
         cell_update = [r(best_cell[0]), c(best_cell[1])]
 
+        time_estimation = cell_update[0]+ cell_update[1]
+
         file_arr = new_array
 
         for widget in frame.winfo_children():
             widget.destroy()
 
         # Create a label with the instructions
-        label_text = "Please load the container to the indicated spot"
+        label_text = "Please load the container to the indicated spot\n" \
+                     f"Estimated time to complete: {time_estimation} minutes"
         label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
         label.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
 
@@ -530,7 +533,7 @@ def select_container(name):
                                command=lambda: order_of_operations(coord_list, estimated_time))
     generate_order.pack()
 
-def sift_notification(coords):
+def sift_notification(coords, time_estimation):
 
     for widget in frame.winfo_children():
         widget.destroy()
@@ -547,7 +550,8 @@ def sift_notification(coords):
 
     label = tk.Label(frame, text="The application was unable to balance your ship.\n"
                                  "Please deploy the SIFT Method: by removing all containers from the ship and placing them back"
-                                 " matching the following configuration\n", font=("Helvetica", 18))
+                                 " matching the following configuration\n"
+                                 f"Time estimated to accomplish: {time_estimation} minutes\n", font=("Helvetica", 18))
     label.pack()
 
     # create a new frame for the grid
@@ -619,7 +623,7 @@ def order_of_operations(coords, estimated_time):
         label = tk.Label(frame, text=operation, font=("Helvetica", 18))
         label.pack()
 
-    label = tk.Label(frame, text=f"Estimated time to complete: {estimated_time} ", font=("Helvetica", 18))
+    label = tk.Label(frame, text=f"Estimated time to complete: {estimated_time} minutes", font=("Helvetica", 18))
     label.pack()
 
 
