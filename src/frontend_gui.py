@@ -183,7 +183,7 @@ def load_existing_log_file():
     if not os.path.exists(log_file_path):  # checks log path exists
         os.makedirs(log_file_path)
     log_file_to_write = os.path.join(log_file_path, log_file_to_write)
-    open(log_file_to_write, 'w').close()
+    # open(log_file_to_write, 'w').close()
 
     welcome_label = tk.Label(frame, text=f"Using default log file {log_file_to_write}.",
                              font=("Helvetica", 18))
