@@ -1,4 +1,4 @@
-from container_load_balance import log_file_init,log_file_change_user,log_file_enter_comment,manifest_init,write_new_manifest,load_unload_ship,balance_ship,check_unbalance
+from integration_test.container_load_balance import log_file_init,log_file_change_user,log_file_enter_comment,manifest_init,write_new_manifest,load_unload_ship,balance_ship,check_unbalance
 import unittest
 from unittest import mock
 from unittest import TestCase
