@@ -452,9 +452,20 @@ def load_operation():
     back_button = tk.Button(button_frame, text="Back", font=("Helvetica", 16), command=balance_or_transfer)
     back_button.pack(side=tk.LEFT, padx=10)
 
+    def check_attributes():
+        entered_weight = container_weight_entry.get()
+        entered_name = container_name_entry.get()
+        if (entered_weight.isdigit() == False):
+            label.config(text="Please make sure weight is a number.")
+        elif (int(entered_weight) > 99999):
+            label.config(text="Container weight exceeds limit of 99999.")
+        elif (len(entered_name) > 256):
+            label.config(text="Container name too long, please shorten")
+        else :
+            load_instruction()
     # Create the Submit button
     submit_button = tk.Button(button_frame, text="Submit", font=("Helvetica", 16),
-                              command=load_instruction)
+                              command=check_attributes)
     submit_button.pack(side=tk.RIGHT,pady=50)
 
 def unload_operation(arr):
