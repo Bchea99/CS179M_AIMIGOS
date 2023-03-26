@@ -273,6 +273,7 @@ def balance_or_transfer():
         write_new_manifest(outboundFile, file_arr)
         write_to_log_file(f"Finished a cycle. Manifest {outboundFile} was written to desktop, and reminder popup to operator"
                           f" to send file was displayed.",log_file_to_write)
+        operator_popup()
         upload_manifest()
 
     manifest_button = tk.Button(button_frame, text="Finish", font=("Helvetica", 16), command=finished_cycle)
@@ -809,6 +810,16 @@ def add_comment():
 
     submit_button = tk.Button(comment_prompt, text="Submit", command=submit_comment)
     submit_button.pack(side="bottom")
+
+def operator_popup():
+
+    comment_prompt = tk.Tk()
+    comment_prompt.geometry('300x150')
+    comment_prompt.title("REMINDER")
+
+    comment_label = tk.Label(comment_prompt, text=f"Remember to send the \n"
+                                                  f"{current_manifest}OUTBOUND.txt file out.",font=("Helvetica", 12))
+    comment_label.pack(pady=50)
 
 def main():
     program_start()
