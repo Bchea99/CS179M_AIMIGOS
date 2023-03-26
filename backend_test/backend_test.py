@@ -74,7 +74,7 @@ class TestManifestMethods(TestCase):
 class TestLoadUnloadMethods(TestCase):
     # Load, test loading of a container
     @mock.patch('container_load_balance.input', create=True)
-    def test_load(self, mocked_input):
+    def test_load_1(self, mocked_input):
         mocked_input.side_effect = ['Test',123]
         test_arr = np.empty([8,12], dtype='object')
         for i in range(8):
@@ -86,9 +86,41 @@ class TestLoadUnloadMethods(TestCase):
         self.assertTrue(np.array_equiv(test_arr, test_new_arr))
         self.assertTrue(test_time == 9)
 
+    # Load first column full
+    @mock.patch('container_load_balance.input', create=True)
+    def test_load_2(self, mocked_input):
+        mocked_input.side_effect = ['Test',123]
+        test_arr = np.empty([8,12], dtype='object')
+        for i in range(8):
+            for j in range(12):
+                test_arr[i][j] = ["UNUSED", 0]
+                if j == 0:
+                    test_arr[i][j] = ["FULL", 100]
+        test_op = "l"
+        test_new_arr, test_time = load_unload_ship(test_arr, test_op)
+        test_arr[7][1] = ["Test", 123]
+        self.assertTrue(np.array_equiv(test_arr, test_new_arr))
+        self.assertTrue(test_time == 10)
+    
+    # Load first column empty, second column almost full
+    @mock.patch('container_load_balance.input', create=True)
+    def test_load_3(self, mocked_input):
+        mocked_input.side_effect = ['Test',123]
+        test_arr = np.empty([8,12], dtype='object')
+        for i in range(8):
+            for j in range(12):
+                test_arr[i][j] = ["UNUSED", 0]
+                if j == 1 and i != 0:
+                    test_arr[i][j] = ["FULL", 100]
+        test_op = "l"
+        test_new_arr, test_time = load_unload_ship(test_arr, test_op)
+        test_arr[0][1] = ["Test", 123]
+        self.assertTrue(np.array_equiv(test_arr, test_new_arr))
+        self.assertTrue(test_time == 3)
+
     # Unload, test unloading of a container
     @mock.patch('container_load_balance.input', create=True)
-    def test_unload(self, mocked_input):
+    def test_unload_1(self, mocked_input):
         mocked_input.side_effect = ['Test']
         test_arr = np.empty([8,12], dtype='object')
         for i in range(8):
@@ -102,10 +134,51 @@ class TestLoadUnloadMethods(TestCase):
         self.assertTrue(np.array_equiv(test_new_arr, unload_arr))
         self.assertTrue(test_time == 9)
 
+    # Unload: with a container above the one to unload
+    @mock.patch('container_load_balance.input', create=True)
+    def test_unload_2(self, mocked_input):
+        mocked_input.side_effect = ['Test']
+        test_arr = np.empty([8,12], dtype='object')
+        for i in range(8):
+            for j in range(12):
+                test_arr[i][j] = ["UNUSED", 0]
+        test_arr[6][1] = ["ABOVE", 123]
+        unload_arr = test_arr
+        test_arr[7][0] = ["Test", 123]
+        test_arr[6][0] = ["ABOVE", 123]
+        test_op = "u"
+        test_new_arr, test_time = load_unload_ship(test_arr, test_op)
+        test_arr[7][0] = ["Test", 123]
+        self.assertTrue(np.array_equiv(test_new_arr, unload_arr))
+        print(test_time)
+        self.assertTrue(test_time == 11)
+
+    # Unload: Full Column above container to remove
+    @mock.patch('container_load_balance.input', create=True)
+    def test_unload_3(self, mocked_input):
+        mocked_input.side_effect = ['Test']
+        test_arr = np.empty([8,12], dtype='object')
+        for i in range(8):
+            for j in range(12):
+                test_arr[i][j] = ["UNUSED", 0]
+                if j == 3 and i != 0:
+                    test_arr[i][j] = ["FULL"+str(i), 100]
+        unload_arr = test_arr
+        for i in range(8):
+            for j in range(12):
+                test_arr[i][j] = ["UNUSED", 0]
+                if j == 4 and i != 7:
+                    test_arr[i][j] = ["FULL"+str(i), 100]
+        test_arr[7][4] = ["Test", 123]
+        test_op = "u"
+        test_new_arr, test_time = load_unload_ship(test_arr, test_op)
+        test_arr[7][0] = ["Test", 123]
+        self.assertTrue(np.array_equiv(test_new_arr, unload_arr))
+        self.assertTrue(test_time == 45)
+
 class TestBalanceMethods(TestCase):
     # check unbalance, formula to determine legal unbalancing
-    @mock.patch('container_load_balance.input', create=True)
-    def test_check_unbalance(self, mocked_input):
+    def test_check_unbalance(self):
         self.assertTrue(check_unbalance(15,1000) == True)
         self.assertTrue(check_unbalance(10,20) == True)
         self.assertTrue(check_unbalance(20,20) == False)
@@ -116,8 +189,7 @@ class TestBalanceMethods(TestCase):
         self.assertTrue(check_unbalance(99,111) == True)
 
     # Balance, test balancable ship
-    @mock.patch('container_load_balance.input', create=True)
-    def test_balance(self, mocked_input):
+    def test_balance_1(self):
         test_arr = np.empty([8,12], dtype='object')
         for i in range(8):
             for j in range(12):
@@ -129,10 +201,23 @@ class TestBalanceMethods(TestCase):
         test_arr[7][6] = ["Alpha", 100]
         self.assertTrue(np.array_equiv(test_new_arr, test_arr))
         self.assertTrue(time_taken == 8)
+
+    # Balance: Larger weights
+    def test_balance_2(self):
+        test_arr = np.empty([8,12], dtype='object')
+        for i in range(8):
+            for j in range(12):
+                test_arr[i][j] = ["UNUSED", 0]
+        test_arr[7][0] = ["Alpha", 10000]
+        test_arr[7][1] = ["Beta", 9000]
+        test_new_arr, time_taken = balance_ship(test_arr)
+        test_arr[7][0] = ["UNUSED", 0]
+        test_arr[7][6] = ["Alpha", 10000]
+        self.assertTrue(np.array_equiv(test_new_arr, test_arr))
+        self.assertTrue(time_taken == 8)
         
     # Balance, test unbalancable ship to perform SIFT
-    @mock.patch('container_load_balance.input', create=True)
-    def test_unbalance(self, mocked_input):
+    def test_unbalance_1(self):
         test_arr = np.empty([8,12], dtype='object')
         for i in range(8):
             for j in range(12):
@@ -144,6 +229,23 @@ class TestBalanceMethods(TestCase):
         test_arr[7][1] = ["UNUSED", 0]
         test_arr[7][5] = ["Alpha", 100]
         test_arr[7][6] = ["Beta", 89] 
+        print(time_taken)
+        self.assertTrue(np.array_equiv(test_new_arr, test_arr))
+        self.assertTrue(time_taken == 41)
+    
+    # Balance, test unbalancable ship to perform SIFT larger weight
+    def test_unbalance_2(self):
+        test_arr = np.empty([8,12], dtype='object')
+        for i in range(8):
+            for j in range(12):
+                test_arr[i][j] = ["UNUSED", 0]
+        test_arr[7][0] = ["Alpha", 10000]
+        test_arr[7][1] = ["Beta", 8999] # 11% difference no matter what
+        test_new_arr, time_taken = balance_ship(test_arr)
+        test_arr[7][0] = ["UNUSED", 0]
+        test_arr[7][1] = ["UNUSED", 0]
+        test_arr[7][5] = ["Alpha", 10000]
+        test_arr[7][6] = ["Beta", 8999] 
         print(time_taken)
         self.assertTrue(np.array_equiv(test_new_arr, test_arr))
         self.assertTrue(time_taken == 41)

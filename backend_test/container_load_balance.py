@@ -105,7 +105,7 @@ def load_unload_ship(arr, op):
         log_file.write(f"{get_date_time()} \"{c_name}\" is onloaded\n") # log file onloading
     elif op == "u": # unload 
         c_name = input("Enter exact name of container to offload.\n-> ") # container name to move
-        time_taken = move_c(arr, [c_name, 0], -1, -1, 0, []) # loc == -1 to unload
+        coord_list,time_taken = move_c(arr, [c_name, 0], -1, -1, 0, []) # loc == -1 to unload
         print(f"The estimated time of this unload operation is {time_taken} minutes") # time estimation
         log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n") # log file offloading
     return arr, time_taken
@@ -205,7 +205,7 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
             out_bound = -1
             if (cell_c - mod <= 0) or (cell_c - mod >= 13): # so recurs loc doesn't go out of bounds
                 out_bound = 1
-            time_taken = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
+            coord_list,time_taken = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
         i -= 1
     # here, access to container with nothing above, time to move to loc column
     # make current cell UNUSED
@@ -213,7 +213,7 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
     arr[r(i)][c(cell_c)] = ["UNUSED", 0]
     if loc == -1: # if container is to be unloaded
         print(f"Move {cell[0]} container with weight {cell_weight} from [{i}, {cell_c}] in the ship to the truck.") # instruction
-        return time_taken + r(i) + c(cell_c) + 2 # take previous time taken + current container movement + (2 ship->truck) 
+        return coord_list,time_taken + r(i) + c(cell_c) + 2 # take previous time taken + current container movement + (2 ship->truck) 
     # check that no column from cell_c to loc is completely full
     # if any are, move the top container out of the way
     for col in range(cell_c + mod, loc + mod, mod):
