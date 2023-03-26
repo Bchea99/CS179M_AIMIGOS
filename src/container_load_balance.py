@@ -185,6 +185,25 @@ def unload(arr,name):
     return unloadedContainer, coord_list, total_time
     #return move_c(arr, [c_name, 0], -1, 0, 0, coord_list=[])
 
+def check_if_ship_is_balanced(arr):
+        l_cells = []
+        r_cells = []
+        l_w = 0
+        r_w = 0
+
+        for i in range(1, 9):
+            for j in range(1, 13):
+                cell = arr[r(i)][c(j)]
+                if (cell[1] > 0):
+                    if j <= 6:  # left side
+                        l_cells.append(cell + [j, i])
+                        l_w += cell[1]
+                    else:  # right side
+                        r_cells.append(cell + [j])
+                        r_w += cell[1]
+
+        return check_unbalance(l_w, r_w)
+
 # Balance ship: Heavier side of ship is no more than 10%
 # weight of lighter side
 def balance_ship(arr):

@@ -279,7 +279,13 @@ def balance_or_transfer():
     manifest_button = tk.Button(button_frame, text="Finish", font=("Helvetica", 16), command=finished_cycle)
     manifest_button.pack(side=tk.RIGHT, padx=10)
 
-    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command=lambda: ship_balance(file_arr))
+    def balance_check():
+        if(check_if_ship_is_balanced(file_arr.copy())):
+            ship_balance(file_arr)
+        else:
+            ship_already_balanced_notification()
+
+    balance_button = tk.Button(button_frame, text="Balance the ship", font=("Helvetica", 16), command= balance_check)
                                #command=ship_balance)
     balance_button.pack(side=tk.RIGHT, padx=10)
 
@@ -288,6 +294,22 @@ def balance_or_transfer():
     transfer_button = tk.Button(button_frame, text="Start a transfer", font=("Helvetica", 16), command=container_transfer)
     transfer_button.pack(side=tk.LEFT, padx=10)
 
+
+def ship_already_balanced_notification():
+    for widget in frame.winfo_children():
+        widget.destroy()
+
+    fileLabel = tk.Label(frame, text=file_name, font=("Helvetica", 14))
+    fileLabel.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
+
+    # Create a label with the instructions
+    label_text = "The ship has already been balanced"
+    label = tk.Label(frame, text=label_text, font=("Helvetica", 18))
+    label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+
+    continue_button = tk.Button(frame, text="Back", font=("Helvetica", 16),
+                                command=balance_or_transfer)
+    continue_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
 
 #Passing in an array for the ship balancing functionality
 def ship_balance(arr):
