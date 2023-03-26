@@ -8,11 +8,3 @@ This is a senior design project under the instruction of [Dr.Eamonn Keogh](https
 * [David Tellez](https://github.com/Davtellez01)
 * [Ricardo Villacana](https://github.com/RillVicosuh)
 
-## Frontend Development
-* [Tkinter](https://docs.python.org/3/library/tkinter.html) was used as a simple GUI interface for the front end of the software
-
-## Backend Development
-
-## Testing
-
-## Screenshots
