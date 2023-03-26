@@ -4,6 +4,7 @@ import numpy as np
 
 case_number = 5
 
+
 class TestShipCases(TestCase):
     #Before testing out the other functions, we need to test that manifest_init is working so we can compare manifest files
     def test_manifest_to_array(self):
