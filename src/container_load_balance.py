@@ -180,9 +180,9 @@ def load(arr,name,weight=0):
 def unload(arr,name):
     c_name = name
     log_file.write(f"{get_date_time()} \"{c_name}\" is offloaded\n")
-    unloadedContainer, coord_list = move_c(arr, [c_name, 0], -1, -1, 0, coord_list=[])
+    unloadedContainer, coord_list, total_time = move_c(arr, [c_name, 0], -1, -1, 0, coord_list=[])
 
-    return unloadedContainer, coord_list
+    return unloadedContainer, coord_list, total_time
     #return move_c(arr, [c_name, 0], -1, 0, 0, coord_list=[])
 
 # Balance ship: Heavier side of ship is no more than 10%
@@ -225,10 +225,10 @@ def balance_ship(arr):
         if(time.time() - s_time >= 5):
             print("\n\nBalance not possible -_- PERFORM SIFT (put all containers in buffer zone, heaviest switch back and forth till row is filled, move up)\n")
             log_file.write(f"{get_date_time()} The ship is not able to be balanced according to the legal definition in its current state. The operator must perform SIFT.\n") # log file balancing fail
-            sift_configuration = perform_sift(arr)
+            sift_configuration, estimated_time = perform_sift(arr)
             #print(f"The estimated time of this SIFT operation is {time_taken} minutes") # time estimation
             log_file.write(f"{get_date_time()} SIFT has been completed.\n") # log file balancing fail
-            return sift_configuration
+            return sift_configuration, estimated_time
     
     # Balance is possible, determine which cells have to move to the other side
     to_move_right = []
@@ -268,15 +268,16 @@ def balance_ship(arr):
 
     for cell in to_move_right:
         #total_time_taken += move_c(arr, cell, 7, 1, 0)
-        move_dict_R, coord_listR = move_c(arr, cell, 7, 1, 0, coord_list=[])
+        move_dict_R, coord_listR, total_time = move_c(arr, cell, 7, 1, 0, coord_list=[])
+        total_time_taken += total_time
     for cell in to_move_left:
         #total_time_taken += move_c(arr, cell, 6, -1,0)
-        move_dict_L, coord_listL = move_c(arr, cell, 6, -1, 0, coord_list=[])
+        move_dict_L, coord_listL, total_time = move_c(arr, cell, 6, -1, 0, coord_list=[])
+        total_time_taken += total_time
 
     #index 0 is left operations, index 1 is right, index 3 is total time
 
 
-    total_time_taken = move_dict_L['time_to_move'] + move_dict_R['time_to_move']
     coord_list = coord_listR + coord_listL
     balanceData = (move_dict_L, move_dict_R, total_time_taken)
 
@@ -291,7 +292,7 @@ def balance_ship(arr):
     #log_file.write(f"{get_date_time()} The ship has been balanced according to the legal definition of balancing.\n") # log file balancing success
 
     print(balanceData)
-    return coord_list
+    return coord_list, total_time_taken
 # Helper to balance_ship function
 # Returns false if the two sides of ship are balanced;; true otherwise.
 def check_unbalance(l_w, r_w): 
@@ -356,7 +357,7 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
             out_bound = -1
             if (cell_c - mod <= 0) or (cell_c - mod >= 13): # so recurs loc doesn't go out of bounds
                 out_bound = 1
-            currCoord,coord_list = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
+            currCoord,coord_list,time_taken = move_c(arr, curr_cell, cell_c + (mod * out_bound), mod * out_bound, time_taken, coord_list)
             coord_list.append(currCoord)
         i -= 1
     # here, access to container with nothing above, time to move to loc column
@@ -369,7 +370,7 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
         moveDict['name']=cell[0]
         #return statement just returns time
         #return time_taken + r(i) + c(cell_c) + 2 # take previous time taken + current container movement + (2 ship->truck)
-        return moveDict, coord_list
+        return moveDict, coord_list, time_taken
     # check that no column from cell_c to loc is completely full
     # if any are, move the top container out of the way
     for col in range(cell_c + mod, loc + mod, mod):
@@ -394,10 +395,12 @@ def move_c(arr, cell, loc, mod, time_taken, coord_list):
     arr[r(i)][c(cell_c)] = cell
     moveDict["next"] = (i,cell_c)
 
+    total_time = time_taken + time_to_move
+
     #moveDict['prev_coords'] = coord_list.append(move_c())
     print(f"[{i}, {cell_c}] in the ship.") # instruction
     #return moveDict #coord_list + (row_c, j) + (i, cell_c), time_taken + time_to_move # cell has been successfully moved, return time
-    return moveDict, coord_list
+    return moveDict, coord_list, total_time
 
 # Helper for move_c to return arr index of cell
 # cell is guaranteed to be in arr
@@ -457,7 +460,7 @@ def perform_sift(arr):
         time_taken += r(row) + c(col)
         print(f"Move {cell[0]} container with weight {cell[1]} from the buffer zone to [{row}, {col}] in the ship.") # instruction
         mod *= -1 # switch side
-    return arr
+    return arr, time_taken
 
 # MAIN: method below
 # Log file initialization

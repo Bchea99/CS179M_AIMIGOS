@@ -325,11 +325,11 @@ def ship_balance(arr):
 
     global balanceData #balanceData originall declared dict
     arr_copy = arr.copy()
-    balanceData = balance_ship(arr_copy)
+    balanceData, estimated_time = balance_ship(arr_copy)
     #returns balanceData = (leftDictionary, rightDictionary, total_time_taken)
     #here balanceData is not a dictionary
     if isinstance(balanceData[0], dict):
-        order_of_operations(balanceData)
+        order_of_operations(balanceData, estimated_time)
     elif isinstance(balanceData[0][0],list):
         global file_arr
         file_arr = balanceData
@@ -375,17 +375,17 @@ def load_operation():
     label_width = len(label_text)  # 11 is a rough estimate of the average character width
     entry_width = label_width  # Subtract a bit to account for padding and borders
 
-    # Create the First Name entry box
-    container_weight_label = tk.Label(frame, text="Container Weight:")
-    container_weight_label.pack()
-    container_weight_entry = tk.Entry(frame, width=entry_width)
-    container_weight_entry.pack()
-
     # Create the Last Name entry box
     container_name_label = tk.Label(frame, text="Container Name:")
     container_name_label.pack()
     container_name_entry = tk.Entry(frame, width=entry_width)
     container_name_entry.pack()
+
+    # Create the First Name entry box
+    container_weight_label = tk.Label(frame, text="Container Weight:")
+    container_weight_label.pack()
+    container_weight_entry = tk.Entry(frame, width=entry_width)
+    container_weight_entry.pack()
 
     def load_instruction():
         global file_arr
@@ -395,7 +395,7 @@ def load_operation():
 
         load_container_name = container_name_entry.get()
 
-        new_array, best_cell = load(file_arr,load_container_name,container_weight_entry.get())
+        new_array, best_cell = load(file_arr,load_container_name,int(container_weight_entry.get()))
         cell_update = [r(best_cell[0]), c(best_cell[1])]
 
         file_arr = new_array
@@ -511,12 +511,12 @@ def select_container(name):
 
     #actual dictionary value received from here
     global coord_list
-    moveDict, coord_list = unload(file_arr.copy(), name[0])
+    moveDict, coord_list, estimated_time = unload(file_arr.copy(), name[0])
     coord_list.insert(0, moveDict)
 
     print(coord_list)
     generate_order = tk.Button(frame, text="Generate Order of Operations List", font=("Helvetica", 16),
-                             command=lambda: order_of_operations(coord_list))
+                               command=lambda: order_of_operations(coord_list, estimated_time))
     generate_order.pack()
 
 def sift_notification(coords):
@@ -556,7 +556,7 @@ def sift_notification(coords):
                                command=balance_or_transfer)
     finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
 
-def order_of_operations(coords):
+def order_of_operations(coords, estimated_time):
     for widget in frame.winfo_children():
         widget.destroy()
         # we filter out invalid moves from coordinates and put valid ones in here (tuple of dicts)
@@ -573,11 +573,17 @@ def order_of_operations(coords):
     operation = ""
     operations = []
     print(coords)
-    # we need to implement a check to see what coords are empty
-    if type(coords) == dict:
-        validMoves.append(coords)
+
+    if len(coords) != 1:
+        animation_coords = [coords[0]] + coords[1:][::-1]
     else:
-        for coord in coords:
+        animation_coords = coords
+
+    # we need to implement a check to see what coords are empty
+    if type(animation_coords) == dict:
+        validMoves.append(animation_coords)
+    else:
+        for coord in animation_coords:
             if type(coord)!=int:
                 if coord['name'] != '':
                     validMoves.append(coord)
@@ -586,7 +592,10 @@ def order_of_operations(coords):
     #we reverse here to get the order of removing from the top to the desired container
     validMoves = reversed(validMoves)
     for i in validMoves:
-        ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"
+        if(i["next"][0] == 8):
+           ops = "Move" + str(i['first']) + "to the truck" + "\n"
+        else:
+            ops = "Move" + str(i['first']) + "to" + str(i['next']) + "\n"
         operations.append(ops)
 
     print(operations)
@@ -599,9 +608,12 @@ def order_of_operations(coords):
         label = tk.Label(frame, text=operation, font=("Helvetica", 18))
         label.pack()
 
+    label = tk.Label(frame, text=f"Estimated time to complete: {estimated_time} ", font=("Helvetica", 18))
+    label.pack()
+
 
     # here we take in back end coordinates                                                                          #reverse the coordinates here for same reason as above
-    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(reversed(coords)))
+    generate_animation = tk.Button(frame, text="Proceed to Animation", font=("Helvetica", 16),command=lambda: animation(reversed(animation_coords)))
 #                             command=lambda: animation(coordinates))
 
     previous_instructions = []
@@ -671,10 +683,21 @@ def animation(coordinates):
                 cell = tk.Label(grid_frame, text=container_name, font=("Helvetica", 16), borderwidth=1, relief="solid")
                 cell.grid(row=row, column=col, sticky="nsew")
 
-    #Container to move
-    first_container_info = file_arr[8 - first[0]][first[1]-1]
-    file_arr[8 - first[0]][first[1] - 1] = file_arr[8 - second[0]][second[1]-1]
-    file_arr[8 - second[0]][second[1] - 1] = first_container_info
+    #Container to move within the ship
+    if second[0] != 8:
+        first_container_info = file_arr[8 - first[0]][first[1]-1]
+        file_arr[8 - first[0]][first[1] - 1] = file_arr[8 - second[0]][second[1]-1]
+        file_arr[8 - second[0]][second[1] - 1] = first_container_info
+    else:
+        #If it is proposing to get out of the ship, first get the container info
+        first_container_info = file_arr[8 - first[0]][first[1] - 1]
+        #Then remove the container
+        file_arr[8 - first[0]][first[1] - 1] = ["UNUSED", 0]
+        #Check if the destination coordinate has anything beneath it
+        if file_arr[8 - second[0]][7] != ["UNUSED",0]:
+            #If there is nothing beneath it, then it has to get off the ship
+            #If there is a container beneath it, it means it stays on the ship
+            file_arr[8 - second[0]][second[1] - 1] = first_container_info
 
     previous_instructions.append([first_coords])
 
@@ -717,11 +740,13 @@ def animation(coordinates):
     #                                 command=finish)
     #     finish_button.place(relx=0.52,rely=0.8, anchor=tk.CENTER)
 
+    print(coordinates)
 
     if len(validMoves) != 1:
+       validMoves.pop(0)
        # create the continue button
        continue_button = tk.Button(frame, text="Next", font=("Helvetica", 16),
-                                   command= lambda: animation(coord))
+                                   command= lambda: animation(validMoves))
        continue_button.place(relx=0.44, rely=0.8, anchor=tk.CENTER)
     else:
        # create the continue button
